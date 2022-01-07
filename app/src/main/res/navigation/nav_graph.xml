@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/systemCreateFragment"
+    android:id="@+id/nav_graph">
+
+    <fragment
+        android:id="@+id/systemCreateFragment"
+        android:name="com.example.parkingapp.feature_parking.presentation.system_create.SystemCreateFragment"
+        android:label="SystemCreateFragment"
+        tools:layout="@layout/fragment_system_create">
+        <action
+            android:id="@+id/action_systemCreateFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment"
+            app:popUpTo="@id/nav_graph" />
+    </fragment>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.parkingapp.feature_parking.presentation.welcome.WelcomeFragment"
+        android:label="WelcomeFragment"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_welcomeFragment_to_vehicleFragment"
+            app:destination="@id/vehicleFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_parkingLotFragment"
+            app:destination="@id/parkingLotFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/vehicleFragment"
+        android:name="com.example.parkingapp.feature_parking.presentation.vehicle.VehicleFragment"
+        android:label="VehicleFragment"
+        tools:layout="@layout/fragment_vehicle">
+        <action
+            android:id="@+id/action_vehicleFragment_to_parkingLotFragment"
+            app:destination="@id/parkingLotFragment"
+            app:popUpTo="@id/welcomeFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/parkingLotFragment"
+        android:name="com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotFragment"
+        android:label="ParkingLotFragment"
+        tools:layout="@layout/fragment_parking_lot">
+        <argument
+            android:name="parkingLot"
+            app:argType="com.example.parkingapp.feature_parking.domain.model.ParkingLot" />
+        <action
+            android:id="@+id/action_parkingLotFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+</navigation>

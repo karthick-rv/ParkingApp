@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ParkingApp</string>
+    <string name="park">Park</string>
+    <string name="unpark">UnPark</string>
+    <string name="showStatus">Show Status</string>
+    <string name="parking_system">Parking System</string>
+    <string name="number_of_floors_in_the_system">Number of Floors in the System</string>
+    <string name="create_system">Create System</string>
+    <string name="number_of_parking_space_in_a_floor">Number of Parking Space in a Floor</string>
+    <string name="number_of_floors">Number of Floors</string>
+    <string name="vehicle_details">Vehicle details</string>
+    <string name="vehicle_number">Vehicle Number</string>
+    <string name="vehicle_name_with_model">Vehicle Name with model</string>
+    <string name="park_vehicle">Park Vehicle</string>
+    <string name="car">Car</string>
+    <string name="btnContinue">Continue</string>
+</resources>
