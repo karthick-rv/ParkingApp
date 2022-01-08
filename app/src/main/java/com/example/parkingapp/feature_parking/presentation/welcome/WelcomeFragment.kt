@@ -9,14 +9,18 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.example.parkingapp.R
 import com.example.parkingapp.databinding.FragmentWelcomeBinding
+import com.example.parkingapp.feature_parking.common.Resource
 import com.example.parkingapp.feature_parking.domain.model.ParkingLot
 import com.example.parkingapp.feature_parking.domain.model.ParkingLotConfig
 import com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotEvent
 import com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotViewModel
 import com.example.parkingapp.feature_parking.presentation.system_create.SystemConfigManager
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.firstOrNull
@@ -45,11 +49,47 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
 
     private fun setupViews() {
         binding.btnPark.setOnClickListener {
-            navigateToVehicleFragment()
+            viewModel.getParkingLotOccupancyStatus()
+            listenForParkingLotStatusToPark()
         }
         binding.btnshowStatus.setOnClickListener {
-            viewModel.onEvent(ParkingLotEvent.ShowLotStatus)
+            viewModel.onEvent(ParkingLotEvent.ShowParkingLot)
             listenForParkingLot()
+        }
+        binding.btnUnPark.setOnClickListener {
+            viewModel.getParkedSpaces()
+            listenForParkedSpaces()
+        }
+    }
+
+    private fun listenForParkingLotStatusToPark() {
+        lifecycleScope.launch {
+            viewModel.isParkingLotFullFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    if(!it)
+                        navigateToVehicleFragment()
+                    else
+                        Snackbar.make(
+                            requireView(),
+                            "Parking Lot is Full. Try after some time", LENGTH_SHORT
+                        ).show()
+                }
+        }
+    }
+
+    private fun listenForParkedSpaces() {
+        lifecycleScope.launch {
+            viewModel.parkedSpacesFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    if (it.isNotEmpty()) {
+                        navigateToUnParkFragment()
+                    } else {
+                        Snackbar.make(
+                            requireView(),
+                            "No vehicle available to unpark", LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
     }
 
@@ -57,34 +97,49 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         lifecycleScope.launch {
             viewModel.parkingLotFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    navigateToParkingLotFragment(it)
+                    if (it is Resource.Success)
+                        it.data?.let { it1 -> navigateToParkingLotFragment(it1) }
                 }
         }
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         runBlocking {
-            val floorCount =  systemConfigManager.systemFloorCountFlow.firstOrNull()!!
-            val parkingSpaceCount = systemConfigManager.systemParkingSpaceCountFlow.firstOrNull()!!
-            viewModel.configure(parkingLotConfig = ParkingLotConfig("", floorCount, parkingSpaceCount))
+            val parkingLotConfig = systemConfigManager.getSystemConfig().firstOrNull()
+            parkingLotConfig?.let {
+                viewModel.configure(
+                    parkingLotConfig = ParkingLotConfig(
+                        "",
+                        it.floorCount,
+                        it.parkingSpaceCount
+                    )
+                )
+            }
         }
     }
 
     private fun navigateToVehicleFragment() {
-        val controller = findNavController()
-        if (controller.currentDestination?.id == R.id.welcomeFragment) {
-            controller.navigate(R.id.action_welcomeFragment_to_vehicleFragment)
-        }
+        val action = WelcomeFragmentDirections.actionWelcomeFragmentToVehicleFragment()
+        navigateToFragment(action)
     }
 
     private fun navigateToParkingLotFragment(parkingLot: ParkingLot) {
         val action =
             WelcomeFragmentDirections.actionWelcomeFragmentToParkingLotFragment(parkingLot = parkingLot)
+        navigateToFragment(action)
+    }
+
+    private fun navigateToUnParkFragment() {
+        val action = WelcomeFragmentDirections.actionWelcomeFragmentToUnParkFragment()
+        navigateToFragment(action)
+    }
+
+    private fun navigateToFragment(action: NavDirections) {
         val controller = findNavController()
         if (controller.currentDestination?.id == R.id.welcomeFragment) {
             controller.navigate(action)
         }
     }
-
 }

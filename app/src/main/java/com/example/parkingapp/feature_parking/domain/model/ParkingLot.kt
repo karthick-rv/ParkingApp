@@ -4,5 +4,6 @@ import java.io.Serializable
 
 data class ParkingLot(
     val name: String,
-    val floors: List<Floor>
+    val floors: List<Floor>,
+    var isFull: Boolean
 ):Serializable

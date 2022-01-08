@@ -6,11 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.parkingapp.databinding.FragmentSystemCreateBinding
+import com.example.parkingapp.feature_parking.common.Resource
+import com.example.parkingapp.feature_parking.domain.model.ParkingLotConfig
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,28 +44,30 @@ class SystemCreateFragment : Fragment() {
             val floorCount: String = binding.txtInputNumOfFloors.editText?.text.toString()
             val parkingSpaceCountPerFloor: String =
                 binding.txtInputNumOfParkingSpace.editText?.text.toString()
-            val response = viewModel.createParkingSystem(floorCount, parkingSpaceCountPerFloor)
-            handleResponse(response)
+            viewModel.createParkingSystem(floorCount, parkingSpaceCountPerFloor)
+            listenForParkingLotConfig()
         }
     }
 
-    private fun handleResponse(response: SystemCreateResponse) {
-        when (response) {
-            is SystemCreateResponse.Success -> {
-                val action =
-                    SystemCreateFragmentDirections.actionSystemCreateFragmentToWelcomeFragment()
-                lifecycleScope.launch {
-                    systemConfigManager.storeSystemCreation(
-                        floorCount = response.floorCount,
-                        parkingSpaceCount = response.parkingSpaceCount
-                    )
+    private fun listenForParkingLotConfig(){
+        lifecycleScope.launch {
+            viewModel.parkingLotConfigFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                   when(it){
+                       is Resource.Success -> {
+                           val action =
+                               SystemCreateFragmentDirections.actionSystemCreateFragmentToWelcomeFragment()
+                           findNavController().navigate(action)
+                       }
+                       is Resource.Error -> {
+                           it.message?.let { it1 ->
+                               Snackbar.make(requireView(), it1, Snackbar.LENGTH_SHORT)
+                                   .show()
+                           }
+                       }
+                       else -> {}
+                   }
                 }
-                findNavController().navigate(action)
-            }
-            is SystemCreateResponse.Error -> {
-                Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT)
-                    .show()
-            }
         }
     }
 }

@@ -2,8 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/systemCreateFragment"
-    android:id="@+id/nav_graph">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/systemCreateFragment">
 
     <fragment
         android:id="@+id/systemCreateFragment"
@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_welcomeFragment_to_parkingLotFragment"
             app:destination="@id/parkingLotFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_unParkFragment"
+            app:destination="@id/unParkFragment" />
     </fragment>
     <fragment
         android:id="@+id/vehicleFragment"
@@ -35,7 +38,7 @@
         <action
             android:id="@+id/action_vehicleFragment_to_parkingLotFragment"
             app:destination="@id/parkingLotFragment"
-            app:popUpTo="@id/welcomeFragment"/>
+            app:popUpTo="@id/welcomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/parkingLotFragment"
@@ -49,7 +52,16 @@
             android:id="@+id/action_parkingLotFragment_to_welcomeFragment"
             app:destination="@id/welcomeFragment"
             app:popUpTo="@id/welcomeFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/unParkFragment"
+        android:name="com.example.parkingapp.feature_parking.presentation.unpark.UnParkFragment"
+        android:label="UnParkFragment"
+        tools:layout="@layout/fragment_unpark">
+        <action
+            android:id="@+id/action_unParkFragment_to_parkingLotFragment"
+            app:destination="@id/parkingLotFragment" />
     </fragment>
 
 </navigation>

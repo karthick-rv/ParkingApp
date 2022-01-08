@@ -1,0 +1,11 @@
+
+syntax = "proto3";
+
+option java_package = "com.example.parkingapp";
+option java_multiple_files = true;
+
+message SystemConfigStore{
+    int32 floor_count = 1;
+    int32 parking_space_count = 2;
+    bool  system_created = 3;
+}

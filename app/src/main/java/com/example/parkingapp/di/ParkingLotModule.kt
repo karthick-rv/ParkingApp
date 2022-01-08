@@ -2,21 +2,15 @@ package com.example.parkingapp.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.parkingapp.feature_parking.data.data_source.ParkingSpaceDatabase
+import com.example.parkingapp.feature_parking.data.data_source.ParkingLotDatabase
 import com.example.parkingapp.feature_parking.data.repository.ParkingSpaceRepository
-import com.example.parkingapp.feature_parking.domain.model.ParkingLotConfig
 import com.example.parkingapp.feature_parking.domain.repository.ParkingSpaceRepositoryImpl
-import com.example.parkingapp.feature_parking.domain.use_case.CreateParkingLot
-import com.example.parkingapp.feature_parking.domain.use_case.GetAllotmentStatus
-import com.example.parkingapp.feature_parking.domain.use_case.ParkVehicle
-import com.example.parkingapp.feature_parking.domain.use_case.ParkingUseCases
+import com.example.parkingapp.feature_parking.domain.use_case.*
 import com.example.parkingapp.feature_parking.presentation.system_create.SystemConfigManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Singleton
 
 @Module
@@ -25,18 +19,18 @@ object ParkingLotModule {
 
     @Provides
     @Singleton
-    fun provideParkingSlotDatabase(app: Application): ParkingSpaceDatabase {
+    fun provideParkingSlotDatabase(app: Application): ParkingLotDatabase {
         return Room.databaseBuilder(
             app,
-            ParkingSpaceDatabase::class.java,
-            ParkingSpaceDatabase.DATABASE_NAME
+            ParkingLotDatabase::class.java,
+            ParkingLotDatabase.DATABASE_NAME
         ).build()
     }
 
     @Provides
     @Singleton
-    fun provideParkingLotRepository(parkingSpaceDatabase: ParkingSpaceDatabase): ParkingSpaceRepository {
-        return ParkingSpaceRepositoryImpl(parkingSpaceDatabase.parkingSpaceDao)
+    fun provideParkingLotRepository(parkingLotDatabase: ParkingLotDatabase): ParkingSpaceRepository {
+        return ParkingSpaceRepositoryImpl(parkingLotDatabase.parkingSpaceDao)
     }
 
     @Provides
@@ -45,7 +39,9 @@ object ParkingLotModule {
         return ParkingUseCases(
             createParkingLot = CreateParkingLot(),
             getAllotmentStatus = GetAllotmentStatus(repository),
-            parkVehicle = ParkVehicle(repository)
+            parkVehicle = ParkVehicle(repository),
+            unParkVehicle = UnParkVehicle(repository),
+            getParkedSpaces = GetParkedSpaces(repository)
         )
     }
 
