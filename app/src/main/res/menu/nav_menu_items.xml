@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/welcomeFragment"
+        android:icon="@drawable/ic_park"
+        android:title="@string/parking" />
+    <item
+        android:icon="@drawable/ic_reservation"
+        android:title="@string/reservation" />
+    <item
+        android:id="@+id/transactionsFragment"
+        android:icon="@drawable/ic_transactions"
+        android:title="@string/transactions" />
+
+</menu>

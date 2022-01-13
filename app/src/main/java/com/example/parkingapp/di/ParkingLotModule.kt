@@ -2,6 +2,7 @@ package com.example.parkingapp.di
 
 import android.app.Application
 import androidx.room.Room
+import com.example.parkingapp.feature_fee_collection.data.repository.ParkingTicketRepository
 import com.example.parkingapp.feature_parking.data.data_source.ParkingLotDatabase
 import com.example.parkingapp.feature_parking.data.repository.ParkingSpaceRepository
 import com.example.parkingapp.feature_parking.domain.repository.ParkingSpaceRepositoryImpl
@@ -24,7 +25,7 @@ object ParkingLotModule {
             app,
             ParkingLotDatabase::class.java,
             ParkingLotDatabase.DATABASE_NAME
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Provides
@@ -35,12 +36,12 @@ object ParkingLotModule {
 
     @Provides
     @Singleton
-    fun provideParkingUseCases(repository: ParkingSpaceRepository): ParkingUseCases {
+    fun provideParkingUseCases(repository: ParkingSpaceRepository, parkingTicketRepository: ParkingTicketRepository): ParkingUseCases {
         return ParkingUseCases(
             createParkingLot = CreateParkingLot(),
             getAllotmentStatus = GetAllotmentStatus(repository),
-            parkVehicle = ParkVehicle(repository),
-            unParkVehicle = UnParkVehicle(repository),
+            parkVehicle = ParkVehicle(repository, parkingTicketRepository),
+            unParkVehicle = UnParkVehicle(repository, parkingTicketRepository),
             getParkedSpaces = GetParkedSpaces(repository)
         )
     }

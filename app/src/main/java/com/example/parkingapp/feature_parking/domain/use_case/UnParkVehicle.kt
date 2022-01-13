@@ -1,29 +1,36 @@
 package com.example.parkingapp.feature_parking.domain.use_case
 
+import com.example.parkingapp.feature_fee_collection.data.repository.ParkingTicketRepository
+import com.example.parkingapp.feature_fee_collection.domain.model.ParkingTicket
 import com.example.parkingapp.feature_parking.data.repository.ParkingSpaceRepository
-import com.example.parkingapp.feature_parking.domain.model.ParkingLot
 import com.example.parkingapp.feature_parking.domain.model.Vehicle
+import com.example.parkingapp.feature_parking.domain.util.DateUtil
+import java.lang.Exception
 
-class UnParkVehicle(val repository: ParkingSpaceRepository) {
+class UnParkVehicle(
+    val repository: ParkingSpaceRepository,
+    private val parkingTicketRepository: ParkingTicketRepository
+) {
 
-    suspend operator fun invoke(parkingLot: ParkingLot, vehicle: Vehicle): ParkingLot {
-        val parkedSpaces = repository.getAllSpaces()
+    suspend operator fun invoke(vehicle: Vehicle): ParkingTicket {
 
-        val parkedSpaceList =
-            parkedSpaces.filter { parkingSpace -> parkingSpace.name == vehicle.parkingSpaceNum
-                    && parkingSpace.vehicleNum == vehicle.vehicleNum }
+        val parkingTickets = parkingTicketRepository.getAllTickets()
 
-        parkedSpaceList.isNotEmpty().let {
-            val parkedSpace = parkedSpaceList[0]
-            repository.deleteSpace(parkingSpace = parkedSpace)
-            val floor = parkingLot.floors.filter { floor -> floor.name == parkedSpace.floorName }
-            val space =
-                floor[0].parkingSpaces.filter { parkingSpace -> parkingSpace.name == parkedSpace.name }
-            space[0].apply {
-                free = true
-                vehicleNum = null
-            }
+        //TODO - parkingTicketNum validation
+        val parkingTicketList =
+            parkingTickets.filter { parkingTicket -> parkingTicket.ticketId == vehicle.parkingTicketNum?.toLong() && parkingTicket.amountPaid == null }
+
+        if(parkingTicketList.isNotEmpty()){
+            val parkingTicket = parkingTicketList[0]
+            val currentDateTime = DateUtil.getCurrentDateTime()
+
+            return parkingTicket.copy(
+                pickUpTime = currentDateTime,
+                duration = DateUtil.getDuration(parkingTicket.parkedTime, currentDateTime)
+                    .toString()
+            )
+        }else{
+            throw Exception() //TODO(Handle error)
         }
-        return parkingLot
     }
 }

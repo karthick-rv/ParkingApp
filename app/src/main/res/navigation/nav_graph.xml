@@ -36,8 +36,8 @@
         android:label="VehicleFragment"
         tools:layout="@layout/fragment_vehicle">
         <action
-            android:id="@+id/action_vehicleFragment_to_parkingLotFragment"
-            app:destination="@id/parkingLotFragment"
+            android:id="@+id/action_vehicleFragment_to_parkingTicketFragment"
+            app:destination="@id/parkingTicketFragment"
             app:popUpTo="@id/welcomeFragment" />
     </fragment>
     <fragment
@@ -60,8 +60,56 @@
         android:label="UnParkFragment"
         tools:layout="@layout/fragment_unpark">
         <action
-            android:id="@+id/action_unParkFragment_to_parkingLotFragment"
-            app:destination="@id/parkingLotFragment" />
+            android:id="@+id/action_unParkFragment_to_parkingTicketFragment"
+            app:destination="@id/parkingTicketFragment"
+            app:popUpTo="@id/welcomeFragment"/>
     </fragment>
+    <fragment
+        android:id="@+id/parkingTicketFragment"
+        android:name="com.example.parkingapp.feature_fee_collection.presentation.parking_ticket.ParkingTicketFragment"
+        android:label="ParkingTicketFragment"
+        tools:layout="@layout/fragment_parking_ticket">
+        <argument
+            android:name="parkingTicket"
+            app:argType="com.example.parkingapp.feature_fee_collection.domain.model.ParkingTicket" />
+        <action
+            android:id="@+id/action_parkingTicketFragment_to_parkingLotFragment"
+            app:destination="@id/parkingLotFragment"
+            app:popUpTo="@id/welcomeFragment"/>
+        <action
+            android:id="@+id/action_parkingTicketFragment_to_paymentFragment"
+            app:destination="@id/paymentFragment"
+            app:popUpTo="@id/welcomeFragment"/>
 
+    </fragment>
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.example.parkingapp.feature_fee_collection.presentation.payment.PaymentFragment"
+        android:label="PaymentFragment"
+        tools:layout="@layout/fragment_payment">
+        <argument
+            android:name="parkingTicketId"
+            app:argType="long"/>
+        <action
+            android:id="@+id/action_paymentFragment_to_paymentResultFragment"
+            app:destination="@id/paymentResultFragment"
+            app:popUpTo="@id/welcomeFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/paymentResultFragment"
+        android:name="com.example.parkingapp.feature_fee_collection.presentation.payment.PaymentResultFragment"
+        android:label="PaymentResultFragment"
+        tools:layout="@layout/fragment_payment_result">
+        <action
+            android:id="@+id/action_paymentResultFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+        <argument
+            android:name="amountPaid"
+            app:argType="float"/>
+    </fragment>
+    <fragment
+        android:id="@+id/transactionsFragment"
+        android:name="com.example.parkingapp.feature_transactions.presentation.transactions.TransactionsFragment"
+        android:label="TransactionsFragment"
+        tools:layout="@layout/fragment_transactions"/>
 </navigation>

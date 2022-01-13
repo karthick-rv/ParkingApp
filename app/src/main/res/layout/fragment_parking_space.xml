@@ -19,7 +19,7 @@
         tools:text="PS"
         android:gravity="center"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
     />
 
     <TextView
@@ -29,6 +29,19 @@
         android:textSize="12sp"
         android:textColor="@color/red"
         tools:text="CAR"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        />
+
+    <TextView
+        android:id="@+id/tvTicketNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="@color/black"
+        tools:text=""
+        android:textStyle="bold"
         android:gravity="center"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"

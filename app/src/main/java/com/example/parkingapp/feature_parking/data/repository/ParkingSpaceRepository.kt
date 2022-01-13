@@ -11,6 +11,6 @@ interface ParkingSpaceRepository {
 
     suspend fun getAllSpaces(): List<ParkingSpace>
 
-    suspend fun getSpaceBy(vehicleNum: Int): ParkingSpace
+    suspend fun getSpaceBy(parkingSpaceName: String): ParkingSpace
 
 }

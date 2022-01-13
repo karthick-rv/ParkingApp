@@ -91,6 +91,11 @@ class ParkingLotFragment :Fragment(){
                 tvParkingSpaceName.text = it.name
                 tvParkingSpaceType.text = it.type.name
                 tvVehicleName.text = it.vehicleNum
+                tvTicketNum.visibility = View.GONE
+                it.parkingTicketNum?.let {
+                    tvTicketNum.text = it.toString()
+                    tvTicketNum.visibility = View.VISIBLE
+                }
                 if(!it.free) parkingSpaceLayout.setBackgroundResource(R.drawable.rectangle_shape_grey)
             }
             spaceLayout.addView(parkingSpaceView.root)

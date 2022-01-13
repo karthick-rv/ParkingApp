@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.parkingapp.R
 import com.example.parkingapp.databinding.FragmentUnparkBinding
+import com.example.parkingapp.feature_fee_collection.domain.model.ParkingTicket
 import com.example.parkingapp.feature_parking.common.Resource
 import com.example.parkingapp.feature_parking.domain.model.ParkingLot
 import com.example.parkingapp.feature_parking.domain.model.Vehicle
@@ -41,28 +42,27 @@ class UnParkFragment: Fragment() {
     }
 
     private fun setupViews() {
-
         binding.btnUnPark.setOnClickListener {
-            val vehicleNum = binding.txtInpVehicleNum.editText?.text.toString()
-            val parkingSpaceNum = binding.txtParkingSpaceNum.editText?.text.toString()
-            val vehicle = Vehicle(vehicleNum, "", parkingSpaceNum, VehicleType.CAR)
+            val parkingTicketNum = binding.txtInpTicketNum.editText?.text.toString()
+            val vehicleNum = binding.txtVehicleNum.editText?.text.toString()
+            val vehicle = Vehicle(vehicleNum,"", "",VehicleType.CAR,parkingTicketNum)
             viewModel.onEvent(ParkingLotEvent.UnPark(vehicle))
-            listenForParkingLot()
+            listenForParkingTicket()
         }
     }
 
-    private fun listenForParkingLot() {
+    private fun listenForParkingTicket() {
         lifecycleScope.launch {
-            viewModel.parkingLotFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            viewModel.parkingTicketFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
                     handleParkingLotResult(it)
                 }
         }
     }
 
-    private fun handleParkingLotResult(resource: Resource<ParkingLot>) {
+    private fun handleParkingLotResult(resource: Resource<ParkingTicket>) {
         when (resource) {
-            is Resource.Success -> resource.data?.let { navigateToParkingLotFragment(it) }
+            is Resource.Success -> resource.data?.let { navigateToParkingTicketFragment(it) }
             is Resource.Loading -> {
             }
             is Resource.Error -> {
@@ -75,12 +75,11 @@ class UnParkFragment: Fragment() {
         }
     }
 
-    private fun navigateToParkingLotFragment(parkingLot: ParkingLot) {
-        val action = UnParkFragmentDirections.actionUnParkFragmentToParkingLotFragment(parkingLot)
+    private fun navigateToParkingTicketFragment(parkingTicket: ParkingTicket) {
+        val action = UnParkFragmentDirections.actionUnParkFragmentToParkingTicketFragment(parkingTicket)
         val controller = findNavController()
         if (controller.currentDestination?.id == R.id.unParkFragment) {
             controller.navigate(action)
         }
     }
-
 }

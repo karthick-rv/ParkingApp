@@ -15,7 +15,7 @@
         app:layout_constraintGuide_percent="0.15" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/txtInpVehicleNum"
+        android:id="@+id/txtInpTicketNum"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,22 +25,22 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/vehicle_number" />
+            android:hint="@string/ticket_number" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/txtParkingSpaceNum"
+        android:id="@+id/txtVehicleNum"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInpVehicleNum">
+        app:layout_constraintTop_toBottomOf="@+id/txtInpTicketNum">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/parking_space_number" />
+            android:hint="@string/vehicle_number" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -52,6 +52,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInpVehicleNum" />
+        app:layout_constraintTop_toBottomOf="@+id/txtVehicleNum" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

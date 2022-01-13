@@ -6,5 +6,6 @@ data class Vehicle (
     val vehicleNum : String,
     val model: String,
     val parkingSpaceNum: String,
-    val type: VehicleType
+    val type: VehicleType,
+    val parkingTicketNum: String? = null,
 )

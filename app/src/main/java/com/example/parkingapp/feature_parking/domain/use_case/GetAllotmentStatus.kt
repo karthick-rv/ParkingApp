@@ -8,9 +8,9 @@ class GetAllotmentStatus(private val repository: ParkingSpaceRepository) {
 
     suspend operator fun invoke(parkingLot: ParkingLot): ParkingLot{
 
-        val parkingSpacesWithVehicle = repository.getAllSpaces()
+        val parkedSpaces = repository.getAllSpaces()
 
-        parkingSpacesWithVehicle.forEach { parkingSpace ->
+        parkedSpaces.forEach { parkingSpace ->
             val floorName = parkingSpace.floorName
             val parkingSpaceNumber = parkingSpace.name.substring(1).toInt()
 
@@ -20,6 +20,7 @@ class GetAllotmentStatus(private val repository: ParkingSpaceRepository) {
             space.apply {
                 free = parkingSpace.free
                 vehicleNum = parkingSpace.vehicleNum
+                parkingTicketNum = parkingSpace.parkingTicketNum
             }
         }
         updateFloorStatus(parkingLot)

@@ -16,8 +16,7 @@ interface ParkingSpaceDao {
     @Query("SELECT * FROM parkingspace")
     suspend fun getAll(): List<ParkingSpace>
 
-    @Query("SELECT * FROM parkingspace WHERE vehicleNum =:vehicleNum")
-    suspend fun get(vehicleNum: Int): ParkingSpace
-
+    @Query("SELECT * FROM parkingspace WHERE name =:parkingSpaceName")
+    suspend fun get(parkingSpaceName: String): ParkingSpace
 
 }

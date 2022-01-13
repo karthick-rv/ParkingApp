@@ -2,6 +2,7 @@ package com.example.parkingapp.feature_parking.presentation.parking_lot
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.parkingapp.feature_fee_collection.domain.model.ParkingTicket
 import com.example.parkingapp.feature_parking.common.Resource
 import com.example.parkingapp.feature_parking.domain.model.*
 import com.example.parkingapp.feature_parking.domain.use_case.ParkingUseCases
@@ -19,6 +20,9 @@ class ParkingLotViewModel @Inject constructor(private val parkingUseCases: Parki
 
     private val _parkingLotFlow: MutableSharedFlow<Resource<ParkingLot>> = MutableSharedFlow()
     val parkingLotFlow: SharedFlow<Resource<ParkingLot>> = _parkingLotFlow
+
+    private val _parkingTicketFlow: MutableSharedFlow<Resource<ParkingTicket>> = MutableSharedFlow()
+    val parkingTicketFlow: SharedFlow<Resource<ParkingTicket>> = _parkingTicketFlow
 
     private val _parkedSpacesFlow: MutableSharedFlow<List<ParkingSpace>> = MutableSharedFlow()
     val parkedSpacesFlow: SharedFlow<List<ParkingSpace>> = _parkedSpacesFlow
@@ -38,11 +42,9 @@ class ParkingLotViewModel @Inject constructor(private val parkingUseCases: Parki
             }
             is ParkingLotEvent.UnPark -> {
                 viewModelScope.launch {
-                    val parkingLot = parkingUseCases.getAllotmentStatus(emptyParkingLot)
-                    _parkingLotFlow.emit(
+                    _parkingTicketFlow.emit(
                         Resource.Success(
                             parkingUseCases.unParkVehicle(
-                                parkingLot = parkingLot,
                                 vehicle = parkingLotEvent.vehicle
                             )
                         )
@@ -79,10 +81,10 @@ class ParkingLotViewModel @Inject constructor(private val parkingUseCases: Parki
         viewModelScope.launch {
             val parkingLot = parkingUseCases.getAllotmentStatus(emptyParkingLot)
             if (parkingLot.isFull) {
-                _parkingLotFlow.emit(Resource.Error("Parking Lot is Full. Try after some time"))
+                _parkingTicketFlow.emit(Resource.Error("Parking Lot is Full. Try after some time"))
             } else {
                 try {
-                    _parkingLotFlow.emit(
+                    _parkingTicketFlow.emit(
                         Resource.Success(
                             parkingUseCases.parkVehicle(
                                 parkingLot,
@@ -91,7 +93,7 @@ class ParkingLotViewModel @Inject constructor(private val parkingUseCases: Parki
                         )
                     )
                 } catch (exception: ParkingSpaceUnavailableException) {
-                    exception.message?.let { _parkingLotFlow.emit(Resource.Error(exception.message)) }
+                    exception.message?.let { _parkingTicketFlow.emit(Resource.Error(exception.message)) }
                 }
             }
         }
