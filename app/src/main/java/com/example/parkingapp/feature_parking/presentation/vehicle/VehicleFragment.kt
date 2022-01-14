@@ -57,8 +57,26 @@ class VehicleFragment : Fragment() {
             val vehicleName = binding.txtInpVehicleModel.editText?.text.toString()
 
             val vehicle = Vehicle(vehicleNum, vehicleName, "", VehicleType.valueOf(vehicleType))
-            viewModel.onEvent(ParkingLotEvent.Park(vehicle))
+            viewModel.onEvent(ParkingLotEvent.Park(vehicle, binding.radioBtnAlreadyReserved.isChecked))
             listenForParkingTicket()
+        }
+
+        setupRadioButtons()
+    }
+
+    private fun setupRadioButtons() {
+        binding.radioBtnAlreadyReserved.setOnClickListener {
+            binding.apply {
+                txtInpVehicleModel.hint = getString(R.string.reservation_ticket_num)
+                tvVehicleDetails.text = getString(R.string.reservation_details)
+            }
+        }
+
+        binding.radioBtnNotReserved.setOnClickListener {
+            binding.apply {
+                txtInpVehicleModel.hint = getString(R.string.vehicle_name_with_model)
+                tvVehicleDetails.text = getString(R.string.vehicle_details)
+            }
         }
     }
 

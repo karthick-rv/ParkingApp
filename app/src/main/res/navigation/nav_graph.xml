@@ -25,7 +25,7 @@
             app:destination="@id/vehicleFragment" />
         <action
             android:id="@+id/action_welcomeFragment_to_parkingLotFragment"
-            app:destination="@id/parkingLotFragment" />
+            app:destination="@id/parkingLotFragmentNew" />
         <action
             android:id="@+id/action_welcomeFragment_to_unParkFragment"
             app:destination="@id/unParkFragment" />
@@ -62,7 +62,7 @@
         <action
             android:id="@+id/action_unParkFragment_to_parkingTicketFragment"
             app:destination="@id/parkingTicketFragment"
-            app:popUpTo="@id/welcomeFragment"/>
+            app:popUpTo="@id/welcomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/parkingTicketFragment"
@@ -75,11 +75,11 @@
         <action
             android:id="@+id/action_parkingTicketFragment_to_parkingLotFragment"
             app:destination="@id/parkingLotFragment"
-            app:popUpTo="@id/welcomeFragment"/>
+            app:popUpTo="@id/welcomeFragment" />
         <action
             android:id="@+id/action_parkingTicketFragment_to_paymentFragment"
             app:destination="@id/paymentFragment"
-            app:popUpTo="@id/welcomeFragment"/>
+            app:popUpTo="@id/welcomeFragment" />
 
     </fragment>
     <fragment
@@ -89,11 +89,11 @@
         tools:layout="@layout/fragment_payment">
         <argument
             android:name="parkingTicketId"
-            app:argType="long"/>
+            app:argType="long" />
         <action
             android:id="@+id/action_paymentFragment_to_paymentResultFragment"
             app:destination="@id/paymentResultFragment"
-            app:popUpTo="@id/welcomeFragment"/>
+            app:popUpTo="@id/welcomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/paymentResultFragment"
@@ -105,11 +105,77 @@
             app:destination="@id/welcomeFragment" />
         <argument
             android:name="amountPaid"
-            app:argType="float"/>
+            app:argType="float" />
     </fragment>
     <fragment
         android:id="@+id/transactionsFragment"
         android:name="com.example.parkingapp.feature_transactions.presentation.transactions.TransactionsFragment"
         android:label="TransactionsFragment"
-        tools:layout="@layout/fragment_transactions"/>
+        tools:layout="@layout/fragment_transactions" />
+    <fragment
+        android:id="@+id/reservationWelcomeFragment"
+        android:name="com.example.parkingapp.feature_reservation.presentation.reservation.ReservationWelcomeFragment"
+        android:label="ReservationWelcomeFragment"
+        tools:layout="@layout/fragment_reservation_welcome" >
+        <action
+            android:id="@+id/action_reservationWelcomeFragment_to_reserveFragment"
+            app:destination="@id/reserveFragment" />
+        <action
+            android:id="@+id/action_reservationWelcomeFragment_to_unReserveFragment"
+            app:destination="@id/unReserveFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reserveFragment"
+        android:name="com.example.parkingapp.feature_reservation.presentation.reservation.ReserveFragment"
+        android:label="ReserveFragment"
+        tools:layout="@layout/fragment_reserve">
+        <action
+            android:id="@+id/action_reserveFragment_to_reservationPaymentFragment"
+            app:destination="@id/reservationPaymentFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/reservationPaymentFragment"
+        android:name="com.example.parkingapp.feature_reservation.presentation.payment.ReservationPaymentFragment"
+        android:label="ReservationPaymentFragment"
+        tools:layout="@layout/fragment_reservation_payment">
+        <argument
+            android:name="reservationFee"
+            app:argType="float" />
+        <action
+            android:id="@+id/action_reservationPaymentFragment_to_reservationTicketFragment"
+            app:destination="@id/reservationTicketFragment"
+            app:popUpTo="@id/reservationWelcomeFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/reservationTicketFragment"
+        android:name="com.example.parkingapp.feature_reservation.presentation.reservation.ReservationTicketFragment"
+        android:label="ReservationTicketFragment"
+        tools:layout="@layout/fragment_reservation_ticket">
+        <argument
+            android:name="reservationTicket"
+            app:argType="com.example.parkingapp.feature_reservation.domain.model.ReservationTicket" />
+        <action
+            android:id="@+id/action_reservationTicketFragment_to_reservationWelcomeFragment"
+            app:destination="@id/reservationWelcomeFragment"
+            app:popUpTo="@id/welcomeFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/unReserveFragment"
+        android:name="com.example.parkingapp.feature_reservation.presentation.unreserve.UnReserveFragment"
+        android:label="UnReserveFragment"
+        tools:layout="@layout/fragment_unreserve">
+        <action
+            android:id="@+id/action_unReserveFragment_to_reservationWelcomeFragment"
+            app:destination="@id/reservationWelcomeFragment"
+            app:popUpTo="@id/reservationWelcomeFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/parkingLotFragmentNew"
+        android:name="com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotFragmentNew"
+        android:label="ParkingLotFragmentNew" >
+        <argument
+            android:name="parkingLot"
+            app:argType="com.example.parkingapp.feature_parking.domain.model.ParkingLot" />
+    </fragment>
 </navigation>

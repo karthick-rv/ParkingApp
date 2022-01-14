@@ -14,7 +14,7 @@ import java.lang.NumberFormatException
 import javax.inject.Inject
 
 @HiltViewModel
-class SystemCreateViewModel @Inject constructor(val systemConfigManager: SystemConfigManager) : ViewModel() {
+class SystemCreateViewModel @Inject constructor(private val systemConfigManager: SystemConfigManager) : ViewModel() {
 
     private val _parkingLotConfigFlow: MutableSharedFlow<Resource<ParkingLotConfig>> = MutableSharedFlow()
     val parkingLotConfigFlow: SharedFlow<Resource<ParkingLotConfig>> = _parkingLotConfigFlow

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 class TransactionsFragment : Fragment() {
 
     private lateinit var binding: FragmentTransactionsBinding
-    private val viewModel by viewModels<TransactionViewModel>()
+    private val viewModel by activityViewModels<TransactionViewModel>()
     private val transactionAdapter by lazy {
         TransactionAdapter()
     }

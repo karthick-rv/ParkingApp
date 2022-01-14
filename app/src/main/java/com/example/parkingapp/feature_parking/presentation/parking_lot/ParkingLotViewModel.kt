@@ -38,18 +38,16 @@ class ParkingLotViewModel @Inject constructor(private val parkingUseCases: Parki
     fun onEvent(parkingLotEvent: ParkingLotEvent) {
         when (parkingLotEvent) {
             is ParkingLotEvent.Park -> {
-                parkVehicle(parkingLotEvent.vehicle)
+                if(parkingLotEvent.isReserved)
+                    parkOnReservedSpace(parkingLotEvent.vehicle)
+                else
+                    parkVehicle(parkingLotEvent.vehicle)
             }
             is ParkingLotEvent.UnPark -> {
-                viewModelScope.launch {
-                    _parkingTicketFlow.emit(
-                        Resource.Success(
-                            parkingUseCases.unParkVehicle(
-                                vehicle = parkingLotEvent.vehicle
-                            )
-                        )
-                    )
-                }
+                if(parkingLotEvent.isReserved)
+                    unParkFromReservedSpace(parkingLotEvent.vehicle)
+                else
+                    unParkVehicle(parkingLotEvent.vehicle)
             }
             is ParkingLotEvent.ShowParkingLot -> {
                 viewModelScope.launch {
@@ -97,6 +95,26 @@ class ParkingLotViewModel @Inject constructor(private val parkingUseCases: Parki
                 }
             }
         }
+    }
+
+    private fun unParkVehicle(vehicle: Vehicle){
+        viewModelScope.launch {
+            _parkingTicketFlow.emit(
+                Resource.Success(
+                    parkingUseCases.unParkVehicle(
+                        vehicle = vehicle
+                    )
+                )
+            )
+        }
+    }
+
+    private fun parkOnReservedSpace(vehicle: Vehicle) {
+        // TODO(Park and show dialog with Parking Space Number)
+    }
+
+    private fun unParkFromReservedSpace(vehicle: Vehicle) {
+        // TODO(UnPark and show dialog with Parking Space Number)
     }
 
 }

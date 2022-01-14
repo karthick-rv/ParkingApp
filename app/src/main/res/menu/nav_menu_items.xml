@@ -5,6 +5,7 @@
         android:icon="@drawable/ic_park"
         android:title="@string/parking" />
     <item
+        android:id="@+id/reservationWelcomeFragment"
         android:icon="@drawable/ic_reservation"
         android:title="@string/reservation" />
     <item

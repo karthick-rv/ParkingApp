@@ -1,27 +1,17 @@
-package com.example.parkingapp.feature_fee_collection.domain.util
+package com.example.parkingapp.feature_reservation.domain.util
 
 import com.example.parkingapp.feature_parking.domain.util.VehicleType
 
-private const val FIRST_HOUR_FEE = 100F
-private const val REMAINING_HOUR_FEE = 60F
+private const val CAR_EXTRA = 250F
+private const val BUS_EXTRA = 300F
 
-private const val CAR_EXTRA = 50F
-private const val BUS_EXTRA = 100F
-
-
-sealed class ParkingFee(
+data class ReservationFee(
     val baseAmount: Float,
     val vehicleType: VehicleType,
     val discountPercentage: Float
-) {
-    class FirstHourFee(vehicleType: VehicleType, discountPercentage: Float = 0F) :
-        ParkingFee(FIRST_HOUR_FEE, vehicleType, discountPercentage)
+)
 
-    class RemainingHourFee(vehicleType: VehicleType, discountPercentage: Float = 0F) :
-        ParkingFee(REMAINING_HOUR_FEE, vehicleType, discountPercentage)
-}
-
-fun ParkingFee.getFees(): Float {
+fun ReservationFee.getFees(): Float {
     val amount = amountForVehicleType(vehicleType, baseAmount)
     val discountAmount = (amount * discountPercentage) / 100
     return amount - discountAmount

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -24,7 +25,7 @@ class SystemCreateFragment : Fragment() {
 
     private lateinit var binding: FragmentSystemCreateBinding
 
-    private val viewModel by viewModels<SystemCreateViewModel>()
+    private val viewModel by activityViewModels<SystemCreateViewModel>()
 
     @Inject
     lateinit var systemConfigManager: SystemConfigManager

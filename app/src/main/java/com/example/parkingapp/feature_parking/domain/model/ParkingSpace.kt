@@ -13,7 +13,8 @@ data class ParkingSpace(
     val floorName: Char,
     var free: Boolean,
     var vehicleNum: String?,
-    var parkingTicketNum: Long? = null
+    var parkingTicketNum: Long? = null,
+    var isReserved: Boolean = false
 ): Serializable
 
 

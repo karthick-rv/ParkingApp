@@ -42,12 +42,27 @@ class UnParkFragment: Fragment() {
     }
 
     private fun setupViews() {
+        setupRadioButtons()
         binding.btnUnPark.setOnClickListener {
             val parkingTicketNum = binding.txtInpTicketNum.editText?.text.toString()
             val vehicleNum = binding.txtVehicleNum.editText?.text.toString()
             val vehicle = Vehicle(vehicleNum,"", "",VehicleType.CAR,parkingTicketNum)
-            viewModel.onEvent(ParkingLotEvent.UnPark(vehicle))
+            viewModel.onEvent(ParkingLotEvent.UnPark(vehicle, binding.radioBtnAlreadyReserved.isChecked))
             listenForParkingTicket()
+        }
+    }
+
+    private fun setupRadioButtons() {
+        binding.radioBtnAlreadyReserved.setOnClickListener {
+            binding.apply {
+                txtInpTicketNum.hint = getString(R.string.reservation_ticket_num)
+            }
+        }
+
+        binding.radioBtnNotReserved.setOnClickListener {
+            binding.apply {
+                tvVehicleDetails.text = getString(R.string.vehicle_details)
+            }
         }
     }
 

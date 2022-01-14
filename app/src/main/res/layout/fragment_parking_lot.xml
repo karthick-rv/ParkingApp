@@ -43,7 +43,4 @@
             app:layout_constraintTop_toBottomOf="@+id/floorScroll" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 </layout>

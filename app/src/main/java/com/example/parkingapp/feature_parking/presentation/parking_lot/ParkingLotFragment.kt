@@ -15,10 +15,10 @@ import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.parkingapp.databinding.FragmentParkingLotBinding
-import com.example.parkingapp.databinding.FragmentParkingSpaceBinding
 import com.example.parkingapp.feature_parking.domain.model.ParkingLot
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.parkingapp.R
+import com.example.parkingapp.databinding.ItemParkingSpaceBinding
 import com.example.parkingapp.feature_parking.domain.model.Floor
 
 @AndroidEntryPoint
@@ -87,7 +87,7 @@ class ParkingLotFragment :Fragment(){
         }
 
         floor.parkingSpaces.forEach{
-            val parkingSpaceView = FragmentParkingSpaceBinding.inflate(inflater, spaceLayout, false).apply {
+            val parkingSpaceView = ItemParkingSpaceBinding.inflate(inflater, spaceLayout, false).apply {
                 tvParkingSpaceName.text = it.name
                 tvParkingSpaceType.text = it.type.name
                 tvVehicleName.text = it.vehicleNum

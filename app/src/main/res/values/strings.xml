@@ -27,7 +27,7 @@
     <string name="pickup_time_value">Pickup Time : &#160; <![CDATA[<b>%s</b>]]></string>
     <string name="view_parking_lot">View Parking Lot</string>
     <string name="proceed_for_payment">Proceed to Payment</string>
-    <string name="ticket_number">Ticket Number</string>
+    <string name="ticket_number">Parking Ticket Number</string>
     <string name="ticket_number_value">Ticket Number : &#160; <![CDATA[<b>%s</b>]]></string>
     <string name="payment_details">Payment Details</string>
     <string name="first_hour_fee">First Hour Fee</string>
@@ -59,4 +59,17 @@
     <string name="coupon_applied">Coupon Applied</string>
     <string name="all">ALL</string>
     <string name="reservation">Reservation</string>
+    <string name="reserve">Reserve</string>
+    <string name="unreserve">UnReserve</string>
+    <string name="pick_date_to_reserve">Pick date to reserve</string>
+    <string name="parking_space_reservation_details">Parking Space Reservation Details</string>
+    <string name="reserve_space">Reserve Space</string>
+    <string name="reserve_date_format">%d - %d - %d </string>
+    <string name="reservation_fees">Reservation Fees</string>
+    <string name="pay_reservation_fees">Pay Reservation Fees</string>
+    <string name="reservation_fee">Reservation Fee - </string>
+    <string name="already_reserved">Already Reserved</string>
+    <string name="not_reserved">Haven\'t Reserved</string>
+    <string name="reservation_ticket_num">Reservation Ticket Number</string>
+    <string name="reservation_details">Reservation Details</string>
 </resources>
