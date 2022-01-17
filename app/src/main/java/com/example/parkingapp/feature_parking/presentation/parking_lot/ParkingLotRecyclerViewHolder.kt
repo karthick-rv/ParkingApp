@@ -1,5 +1,6 @@
 package com.example.parkingapp.feature_parking.presentation.parking_lot
 
+import android.annotation.SuppressLint
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -7,6 +8,7 @@ import com.example.parkingapp.R
 import com.example.parkingapp.databinding.ItemFloorNameBinding
 import com.example.parkingapp.databinding.ItemParkingSpaceBinding
 
+@SuppressLint("SetTextI18n")
 sealed class ParkingLotRecyclerViewHolder(binding: ViewBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
@@ -14,11 +16,11 @@ sealed class ParkingLotRecyclerViewHolder(binding: ViewBinding) :
     class FloorNameViewHolder(private val binding: ItemFloorNameBinding) :
         ParkingLotRecyclerViewHolder(binding) {
 
+
         fun bind(floorItem: ParkingSpaceRecyclerViewItem.FloorItem) {
-            binding.floorName.text = floorItem.name
+            binding.floorName.text = "Floor ${floorItem.name}"
         }
     }
-
 
     class ParkingSpaceViewHolder(private val binding: ItemParkingSpaceBinding) :
         ParkingLotRecyclerViewHolder(binding) {
@@ -42,7 +44,7 @@ sealed class ParkingLotRecyclerViewHolder(binding: ViewBinding) :
                     tvTicketNum.text = text
                 }
                 else if (parkingSpaceItem.parkingSpace.parkingTicketNum != null) {
-                    tvTicketNum.text = parkingSpaceItem.parkingSpace.parkingTicketNum.toString()
+                    tvTicketNum.text = "No- ${parkingSpaceItem.parkingSpace.parkingTicketNum.toString()}"
                 } else {
                     tvTicketNum.visibility = View.GONE
                 }

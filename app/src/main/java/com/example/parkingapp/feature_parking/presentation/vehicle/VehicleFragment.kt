@@ -1,6 +1,7 @@
 package com.example.parkingapp.feature_parking.presentation.vehicle
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,16 +61,16 @@ class VehicleFragment : Fragment() {
             val vehicle: Vehicle
             if (!isReserveChecked){
                 vehicle = Vehicle(vehicleNum, vehicleName, "", VehicleType.valueOf(vehicleType))
-                listenForParkingTicket()
             }
             else{
                 vehicle = Vehicle(vehicleNum, "" , "", VehicleType.valueOf(vehicleType), reservationTicketNum = vehicleName)
-                listenForParkOnReservedSpaceResult()
-            }
 
+            }
             viewModel.onEvent(ParkingLotEvent.Park(vehicle, isReserveChecked))
         }
 
+        listenForParkingTicket()
+        listenForParkOnReservedSpaceResult()
         setupRadioButtons()
     }
 
@@ -102,13 +103,23 @@ class VehicleFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.parkOnReservedResultFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    if(it){
-                        showDialog()
-                    }else{
-                        Snackbar.make(
-                            requireView(),
-                            "Entered details are invalid. Try again", BaseTransientBottomBar.LENGTH_SHORT
-                        ).show()
+                    when(it){
+                        is Resource.Error -> {
+                            Snackbar.make(
+                                requireView(),
+                                it.message.toString(), BaseTransientBottomBar.LENGTH_SHORT
+                            ).show()
+                        }
+                        is Resource.Loading -> TODO()
+                        is Resource.Success -> {
+                            if(it.data == true) showDialog()
+                            else{
+                                Snackbar.make(
+                                    requireView(),
+                                    "Input not valid", BaseTransientBottomBar.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     }
                 }
         }

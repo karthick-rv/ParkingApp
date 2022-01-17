@@ -3,7 +3,10 @@ package com.example.parkingapp.feature_parking.domain.use_case
 import com.example.parkingapp.feature_fee_collection.data.repository.ParkingTicketRepository
 import com.example.parkingapp.feature_fee_collection.domain.model.ParkingTicket
 import com.example.parkingapp.feature_parking.data.repository.ParkingSpaceRepository
-import com.example.parkingapp.feature_parking.domain.model.*
+import com.example.parkingapp.feature_parking.domain.model.ParkingSpace
+import com.example.parkingapp.feature_parking.domain.model.ParkingSpaceUnavailableException
+import com.example.parkingapp.feature_parking.domain.model.Vehicle
+import com.example.parkingapp.feature_parking.domain.model.VehicleAlreadyExistException
 import com.example.parkingapp.feature_parking.domain.util.DateUtil
 import com.example.parkingapp.feature_reservation.data.repository.ReservationTicketRepository
 
@@ -15,13 +18,28 @@ class ParkVehicle(
 ) {
 
     @Throws(ParkingSpaceUnavailableException::class)
-    suspend operator fun invoke(vehicle: Vehicle, parkingLotManager: ParkingLotManager): ParkingTicket {
+    suspend operator fun invoke(
+        vehicle: Vehicle,
+        parkingLotManager: ParkingLotManager
+    ): ParkingTicket {
 
-        val parkingSpace = GetAvailableParkingSpace(parkingSpaceRepository, reservationTicketRepository)(parkingLotManager, vehicle)
+        val parkingSpaceWithVehicle =
+            parkingSpaceRepository.getSpaceByVehicleNum(vehicle.vehicleNum)
+
+        if (parkingSpaceWithVehicle !== null) {
+            throw VehicleAlreadyExistException("Vehicle already exists. Vehicle Number is unique number assigned to your vehicle")
+        }
+
+        val parkingSpace =
+            GetAvailableParkingSpace(parkingSpaceRepository, reservationTicketRepository)(
+                parkingLotManager,
+                vehicle
+            )
 
         parkingSpace?.let {
-           return addParkingTicket(vehicle, it)
-        } ?: throw ParkingSpaceUnavailableException("Parking space not available for ${vehicle.type}")
+            return addParkingTicket(vehicle, it)
+        }
+            ?: throw ParkingSpaceUnavailableException("Parking space not available for ${vehicle.type}")
     }
 
     private suspend fun addParkingTicket(

@@ -44,8 +44,8 @@ class ReservationPaymentFragment: Fragment() {
 
         binding.btnPayFee.setOnClickListener {
             viewModel.onEvent(ReservationEvent.ReserveParkingSpace)
-            listenForReservationResult()
         }
+        listenForReservationResult()
     }
 
     private fun listenForReservationResult() {

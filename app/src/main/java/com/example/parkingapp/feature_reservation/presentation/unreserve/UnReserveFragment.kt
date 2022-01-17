@@ -13,10 +13,13 @@ import androidx.navigation.fragment.findNavController
 import com.example.parkingapp.R
 import com.example.parkingapp.databinding.FragmentUnreserveBinding
 import com.example.parkingapp.feature_fee_collection.domain.util.DialogUtil
+import com.example.parkingapp.feature_parking.common.Resource
 import com.example.parkingapp.feature_parking.domain.model.Vehicle
 import com.example.parkingapp.feature_parking.domain.util.VehicleType
 import com.example.parkingapp.feature_reservation.presentation.ReservationViewModel
 import com.example.parkingapp.feature_reservation.presentation.reservation.ReservationEvent
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -39,19 +42,36 @@ class UnReserveFragment : Fragment() {
 
     private fun setupViews() {
         binding.btnUnReserve.setOnClickListener {
-            val parkingTicketNum = binding.txtInpTicketNum.editText?.text.toString()
+            val reservationTicketNum = binding.txtInpTicketNum.editText?.text.toString()
             val vehicleNum = binding.txtVehicleNum.editText?.text.toString()
-            val vehicle = Vehicle(vehicleNum, "", "", VehicleType.CAR, parkingTicketNum)
+            val vehicle = Vehicle(vehicleNum, "", "", VehicleType.CAR, reservationTicketNum = reservationTicketNum)
             viewModel.onEvent(ReservationEvent.UnReserveParkingSpace(vehicle))
-            listenForUnReserveResult()
         }
+        listenForUnReserveResult()
     }
 
     private fun listenForUnReserveResult() {
         lifecycleScope.launch {
             viewModel.unReserveResult.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    if (it) showDialog()
+                    when(it){
+                        is Resource.Error -> {
+                            Snackbar.make(
+                                requireView(),
+                                it.message.toString(), BaseTransientBottomBar.LENGTH_SHORT
+                            ).show()
+                        }
+                        is Resource.Loading -> TODO()
+                        is Resource.Success -> {
+                            if(it.data == true) showDialog()
+                            else{
+                                Snackbar.make(
+                                    requireView(),
+                                    "Input not valid", BaseTransientBottomBar.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
                 }
         }
     }

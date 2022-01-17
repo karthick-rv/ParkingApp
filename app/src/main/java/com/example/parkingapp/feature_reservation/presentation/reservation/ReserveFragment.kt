@@ -14,10 +14,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.parkingapp.R
 import com.example.parkingapp.databinding.FragmentReserveBinding
+import com.example.parkingapp.feature_parking.common.Resource
 import com.example.parkingapp.feature_parking.domain.model.Vehicle
 import com.example.parkingapp.feature_parking.domain.util.VehicleType
 import com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotViewModel
 import com.example.parkingapp.feature_reservation.presentation.ReservationViewModel
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -61,16 +64,28 @@ class ReserveFragment: Fragment() {
 
             val vehicle = Vehicle(vehicleNum, vehicleName, "", VehicleType.valueOf(vehicleType))
             val date = binding.tvPickedDate.text
-            listenForReservationFees()
             viewModel.onEvent(ReservationEvent.CalculateFees(vehicle, date as String))
         }
+        listenForReservationFees()
     }
 
     private fun listenForReservationFees() {
         lifecycleScope.launch {
             viewModel.reservationFeesFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    navigateToReservationPaymentFragment(it)
+                    when(it){
+                        is Resource.Error -> {
+                            Snackbar.make(
+                                requireView(),
+                                it.message.toString(), BaseTransientBottomBar.LENGTH_SHORT
+                            ).show()
+                        }
+                        is Resource.Loading -> TODO()
+                        is Resource.Success -> {
+                            it.data?.let { it1 -> navigateToReservationPaymentFragment(it1) }
+                        }
+                    }
+
                 }
         }
     }
@@ -94,7 +109,7 @@ class ReserveFragment: Fragment() {
                 binding.tvPickedDate.text =
                     getString(R.string.reserve_date_format, dayOfMonth, (monthOfYear + 1), year)
             }, year, month, date)
-
+        calendarDialog.datePicker.minDate = System.currentTimeMillis() - 1000;
         calendarDialog.show()
     }
 

@@ -42,14 +42,14 @@
             android:id="@+id/vehicleNum"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:text="@{String.format(@string/vehicle_num_tran, parkingTicket.vehicleNum)}"
             android:textColor="@color/black"
             android:textSize="14sp"
+            android:layout_marginTop="5dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline18"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/parkedTime"
             tools:text="Vehicle Num" />
 
 
@@ -99,45 +99,45 @@
             android:id="@+id/duration"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="@{String.format(@string/duration_tran, parkingTicket.duration)}"
             android:textColor="@color/green"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:layout_marginTop="5dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline20"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/parkedTime"
+            app:layout_constraintTop_toBottomOf="@+id/vehicleNum"
             tools:text="Duration" />
 
         <TextView
             android:id="@+id/amountPaid"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:text="@{String.format(@string/amount_paid_tran, Float.toString(parkingTicket.amountPaid))}"
             android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline18"
-            app:layout_constraintTop_toBottomOf="@+id/vehicleNum"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Amount Paid" />
 
         <TextView
             android:id="@+id/couponApplied"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="@string/coupon_applied"
             android:textColor="@color/purple_700"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:layout_marginTop="5dp"
             android:visibility="@{(parkingTicket.couponApplied == true) ? View.VISIBLE: View.GONE }"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline20"
-            app:layout_constraintTop_toBottomOf="@+id/parkedTime"
+            app:layout_constraintTop_toBottomOf="@+id/vehicleNum"
             tools:text="Coupon Applied" />
 
         <androidx.constraintlayout.widget.Guideline

@@ -9,7 +9,7 @@
     <string name="number_of_parking_space_in_a_floor">Number of Parking Space in a Floor</string>
     <string name="number_of_floors">Number of Floors</string>
     <string name="vehicle_details">Vehicle details</string>
-    <string name="vehicle_number">Vehicle Number</string>
+    <string name="vehicle_number">Vehicle Number (Eg : TN 67 DE 1433 )</string>
     <string name="vehicle_number_value">Vehicle Number : &#160; <![CDATA[<b>%s</b>]]></string>
     <string name="vehicle_name_with_model">Vehicle Name with model</string>
     <string name="park_vehicle">Park Vehicle</string>
@@ -79,4 +79,6 @@
     <string name="reserved_date_tran">Reserved Date - %s</string>
     <string name="reserved">Reserved</string>
     <string name="from_reserved_space">From reserved space</string>
+    <string name="parking_lot_status">Parking Lot Status</string>
+    <string name="floor">Floor %s</string>
 </resources>

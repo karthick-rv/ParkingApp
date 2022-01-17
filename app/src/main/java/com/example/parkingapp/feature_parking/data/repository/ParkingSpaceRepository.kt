@@ -13,4 +13,6 @@ interface ParkingSpaceRepository {
 
     suspend fun getSpaceBy(parkingSpaceName: String): ParkingSpace
 
+    suspend fun getSpaceByVehicleNum(vehicleNum: String): ParkingSpace?
+
 }

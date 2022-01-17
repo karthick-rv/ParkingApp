@@ -53,28 +53,36 @@ class UnParkFragment: Fragment() {
             val vehicle: Vehicle
             if (!isReserveChecked){
                 vehicle = Vehicle(vehicleNum, "", "", VehicleType.CAR, parkingTicketNum = parkingTicketNum)
-                listenForParkingTicket()
             }
             else{
                 vehicle = Vehicle(vehicleNum, "" , "", VehicleType.CAR, reservationTicketNum = parkingTicketNum)
-                listenForUnParkFromReservedSpaceResult()
             }
-
             viewModel.onEvent(ParkingLotEvent.UnPark(vehicle, binding.radioBtnAlreadyReserved.isChecked))
         }
+        listenForParkingTicket()
+        listenForUnParkFromReservedSpaceResult()
     }
 
     private fun listenForUnParkFromReservedSpaceResult() {
         lifecycleScope.launch {
             viewModel.unParkFromReservedResultFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    if(it){
-                        showDialog()
-                    }else{
-                        Snackbar.make(
+                    when(it){
+                        is Resource.Error -> { Snackbar.make(
                             requireView(),
-                            "Entered details are invalid. Try again", BaseTransientBottomBar.LENGTH_SHORT
-                        ).show()
+                            it.message.toString(), BaseTransientBottomBar.LENGTH_SHORT
+                        ).show()}
+                        is Resource.Loading -> TODO()
+                        is Resource.Success -> {
+                            if(it.data == true)
+                                showDialog()
+                            else{
+                                Snackbar.make(
+                                    requireView(),
+                                    "Input not valid", BaseTransientBottomBar.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     }
                 }
         }
@@ -115,7 +123,9 @@ class UnParkFragment: Fragment() {
 
     private fun handleParkingLotResult(resource: Resource<ParkingTicket>) {
         when (resource) {
-            is Resource.Success -> resource.data?.let { navigateToParkingTicketFragment(it) }
+            is Resource.Success -> resource.data?.let {
+                navigateToParkingTicketFragment(it)
+            }
             is Resource.Loading -> {
             }
             is Resource.Error -> {

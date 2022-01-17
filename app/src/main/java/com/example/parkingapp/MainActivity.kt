@@ -2,6 +2,7 @@ package com.example.parkingapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -54,8 +55,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setDrawerLayout(navController: NavController) {
+
         val appBarConfiguration =
-            AppBarConfiguration(navController.graph, drawerLayout = binding.drawerLayout)
+            AppBarConfiguration.Builder(
+                setOf(R.id.welcomeFragment))
+                .setOpenableLayout(binding.drawerLayout)
+                .build()
 
         binding.navView.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)

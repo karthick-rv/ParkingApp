@@ -23,6 +23,7 @@ class SystemCreateViewModel @Inject constructor(private val systemConfigManager:
 
         if (floorCount.isBlank() || parkingSpaceCountPerFloor.isBlank()) {
             emitError("Fields Should not be Empty")
+            return
         }
 
         try{
@@ -33,11 +34,17 @@ class SystemCreateViewModel @Inject constructor(private val systemConfigManager:
                 if (floorCountInt > 25) {
                     emitError("Floor Size is limited to 25 for the building")
                 }
-                viewModelScope.launch {
-                    _parkingLotConfigFlow.emit(Resource.Loading())
-                    val parkingLotConfig = ParkingLotConfig("",floorCountInt, parkingSpaceCountInt)
-                    systemConfigManager.storeSystemConfig(parkingLotConfig)
-                    _parkingLotConfigFlow.emit(Resource.Success(parkingLotConfig))
+                else if(parkingSpaceCountInt > 10000){
+                    emitError("Parking Space Size is limited to 10000 for a floor")
+                }
+                else if(parkingSpaceCountInt <5){
+                    emitError("Parking Space Size should be atleast 5")
+                }else{
+                    viewModelScope.launch {
+                        val parkingLotConfig = ParkingLotConfig("",floorCountInt, parkingSpaceCountInt)
+                        systemConfigManager.storeSystemConfig(parkingLotConfig)
+                        _parkingLotConfigFlow.emit(Resource.Success(parkingLotConfig))
+                    }
                 }
             }else{
                 emitError("Values should be greater than 0")

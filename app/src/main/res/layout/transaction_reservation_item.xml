@@ -38,20 +38,20 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Reservation Ticket Num" />
 
+
         <TextView
             android:id="@+id/vehicleNum"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:text="@{String.format(@string/vehicle_num_tran, reservationTicket.vehicleNum)}"
             android:textColor="@color/black"
+            android:layout_marginTop="5dp"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline18"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pickupTime"
             tools:text="Vehicle Num" />
-
 
         <TextView
             android:id="@+id/vehicleType"
@@ -85,28 +85,29 @@
             android:id="@+id/amountPaid"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:text="@{String.format(@string/amount_paid_tran, Float.toString(reservationTicket.amountPaid))}"
             android:textColor="@color/black"
             android:textSize="14sp"
+            android:layout_marginTop="5dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline18"
-            app:layout_constraintTop_toBottomOf="@+id/vehicleNum"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Amount Paid" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="Reservation Ticket"
             android:textColor="@color/pink"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginTop="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pickupTime"
+            app:layout_constraintStart_toStartOf="@+id/guideline20"
+            app:layout_constraintTop_toBottomOf="@+id/vehicleNum"
             tools:text="Reservation Ticket" />
 
         <androidx.constraintlayout.widget.Guideline

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/systemCreateFragment"
         android:name="com.example.parkingapp.feature_parking.presentation.system_create.SystemCreateFragment"
-        android:label="SystemCreateFragment"
+        android:label="Create Parking System"
         tools:layout="@layout/fragment_system_create">
         <action
             android:id="@+id/action_systemCreateFragment_to_welcomeFragment"
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="com.example.parkingapp.feature_parking.presentation.welcome.WelcomeFragment"
-        android:label="WelcomeFragment"
+        android:label="Parking App"
         tools:layout="@layout/fragment_welcome">
         <action
             android:id="@+id/action_welcomeFragment_to_vehicleFragment"
@@ -33,7 +33,7 @@
     <fragment
         android:id="@+id/vehicleFragment"
         android:name="com.example.parkingapp.feature_parking.presentation.vehicle.VehicleFragment"
-        android:label="VehicleFragment"
+        android:label="Park Vehicle"
         tools:layout="@layout/fragment_vehicle">
         <action
             android:id="@+id/action_vehicleFragment_to_parkingTicketFragment"
@@ -46,7 +46,7 @@
     <fragment
         android:id="@+id/parkingLotFragment"
         android:name="com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotFragment"
-        android:label="ParkingLotFragment"
+        android:label="Parking Building View"
         tools:layout="@layout/fragment_parking_lot">
         <action
             android:id="@+id/action_parkingLotFragment_to_welcomeFragment"
@@ -57,7 +57,7 @@
     <fragment
         android:id="@+id/unParkFragment"
         android:name="com.example.parkingapp.feature_parking.presentation.unpark.UnParkFragment"
-        android:label="UnParkFragment"
+        android:label="UnPark Vehicle"
         tools:layout="@layout/fragment_unpark">
         <action
             android:id="@+id/action_unParkFragment_to_parkingTicketFragment"
@@ -70,7 +70,7 @@
     <fragment
         android:id="@+id/parkingTicketFragment"
         android:name="com.example.parkingapp.feature_fee_collection.presentation.parking_ticket.ParkingTicketFragment"
-        android:label="ParkingTicketFragment"
+        android:label="Parking Ticket"
         tools:layout="@layout/fragment_parking_ticket">
         <argument
             android:name="parkingTicket"
@@ -88,7 +88,7 @@
     <fragment
         android:id="@+id/paymentFragment"
         android:name="com.example.parkingapp.feature_fee_collection.presentation.payment.PaymentFragment"
-        android:label="PaymentFragment"
+        android:label="Payment"
         tools:layout="@layout/fragment_payment">
         <argument
             android:name="parkingTicketId"
@@ -101,7 +101,7 @@
     <fragment
         android:id="@+id/paymentResultFragment"
         android:name="com.example.parkingapp.feature_fee_collection.presentation.payment.PaymentResultFragment"
-        android:label="PaymentResultFragment"
+        android:label="Payment Success"
         tools:layout="@layout/fragment_payment_result">
         <action
             android:id="@+id/action_paymentResultFragment_to_welcomeFragment"
@@ -113,12 +113,12 @@
     <fragment
         android:id="@+id/transactionsFragment"
         android:name="com.example.parkingapp.feature_transactions.presentation.transactions.TransactionsFragment"
-        android:label="TransactionsFragment"
+        android:label="Transactions"
         tools:layout="@layout/fragment_transactions" />
     <fragment
         android:id="@+id/reservationWelcomeFragment"
         android:name="com.example.parkingapp.feature_reservation.presentation.reservation.ReservationWelcomeFragment"
-        android:label="ReservationWelcomeFragment"
+        android:label="Reservation"
         tools:layout="@layout/fragment_reservation_welcome" >
         <action
             android:id="@+id/action_reservationWelcomeFragment_to_reserveFragment"
@@ -130,7 +130,7 @@
     <fragment
         android:id="@+id/reserveFragment"
         android:name="com.example.parkingapp.feature_reservation.presentation.reservation.ReserveFragment"
-        android:label="ReserveFragment"
+        android:label="Reserve Vehicle"
         tools:layout="@layout/fragment_reserve">
         <action
             android:id="@+id/action_reserveFragment_to_reservationPaymentFragment"
@@ -140,7 +140,7 @@
     <fragment
         android:id="@+id/reservationPaymentFragment"
         android:name="com.example.parkingapp.feature_reservation.presentation.payment.ReservationPaymentFragment"
-        android:label="ReservationPaymentFragment"
+        android:label="Reservation Payment"
         tools:layout="@layout/fragment_reservation_payment">
         <argument
             android:name="reservationFee"
@@ -153,7 +153,7 @@
     <fragment
         android:id="@+id/reservationTicketFragment"
         android:name="com.example.parkingapp.feature_reservation.presentation.reservation.ReservationTicketFragment"
-        android:label="ReservationTicketFragment"
+        android:label="Reservation Ticket"
         tools:layout="@layout/fragment_reservation_ticket">
         <argument
             android:name="reservationTicket"
@@ -166,7 +166,7 @@
     <fragment
         android:id="@+id/unReserveFragment"
         android:name="com.example.parkingapp.feature_reservation.presentation.unreserve.UnReserveFragment"
-        android:label="UnReserveFragment"
+        android:label="UnReserve Vehicle"
         tools:layout="@layout/fragment_unreserve">
         <action
             android:id="@+id/action_unReserveFragment_to_reservationWelcomeFragment"

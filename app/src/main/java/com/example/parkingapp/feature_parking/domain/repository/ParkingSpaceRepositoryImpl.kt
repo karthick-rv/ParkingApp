@@ -25,4 +25,8 @@ class ParkingSpaceRepositoryImpl @Inject constructor(private val parkingSpaceDao
         return parkingSpaceDao.get(parkingSpaceName)
     }
 
+    override suspend fun getSpaceByVehicleNum(vehicleNum: String): ParkingSpace {
+        return parkingSpaceDao.getByVehicleNum(vehicleNum)
+    }
+
 }

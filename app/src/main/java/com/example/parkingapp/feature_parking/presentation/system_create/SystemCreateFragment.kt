@@ -19,6 +19,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.appcompat.app.AppCompatActivity
+import com.example.parkingapp.R
+import kotlinx.coroutines.flow.collectLatest
+
 
 @AndroidEntryPoint
 class SystemCreateFragment : Fragment() {
@@ -40,14 +44,24 @@ class SystemCreateFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+    }
+
     private fun setupViews() {
         binding.btnCreateSystem.setOnClickListener {
             val floorCount: String = binding.txtInputNumOfFloors.editText?.text.toString()
             val parkingSpaceCountPerFloor: String =
                 binding.txtInputNumOfParkingSpace.editText?.text.toString()
             viewModel.createParkingSystem(floorCount, parkingSpaceCountPerFloor)
-            listenForParkingLotConfig()
         }
+        listenForParkingLotConfig()
     }
 
     private fun listenForParkingLotConfig(){
@@ -56,9 +70,7 @@ class SystemCreateFragment : Fragment() {
                 .collect {
                    when(it){
                        is Resource.Success -> {
-                           val action =
-                               SystemCreateFragmentDirections.actionSystemCreateFragmentToWelcomeFragment()
-                           findNavController().navigate(action)
+                           navigateToWelcomeFragment()
                        }
                        is Resource.Error -> {
                            it.message?.let { it1 ->
@@ -69,6 +81,15 @@ class SystemCreateFragment : Fragment() {
                        else -> {}
                    }
                 }
+        }
+    }
+
+    private fun navigateToWelcomeFragment(){
+        val controller = findNavController()
+        val action =
+            SystemCreateFragmentDirections.actionSystemCreateFragmentToWelcomeFragment()
+        if (controller.currentDestination?.id == R.id.systemCreateFragment) {
+            controller.navigate(action)
         }
     }
 }

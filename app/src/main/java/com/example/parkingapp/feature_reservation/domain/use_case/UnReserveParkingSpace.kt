@@ -9,7 +9,7 @@ class UnReserveParkingSpace(val repository: ReservationTicketRepository) {
 
         val tickets = repository.getAllTickets()
 
-        val ticketList = tickets.filter { reservationTicket -> reservationTicket.ticketId == vehicle.parkingTicketNum?.toLong() && reservationTicket.vehicleNum == vehicle.vehicleNum }
+        val ticketList = tickets.filter { reservationTicket -> reservationTicket.ticketId == vehicle.reservationTicketNum?.toLong() && reservationTicket.vehicleNum == vehicle.vehicleNum }
 
         if(ticketList.isNotEmpty()){
             val reservationTicket = ticketList[0]

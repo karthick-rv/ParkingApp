@@ -29,7 +29,7 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
+class WelcomeFragment : Fragment() {
 
     private lateinit var binding: FragmentWelcomeBinding
     private val viewModel by activityViewModels<ParkingLotViewModel>()
@@ -49,8 +49,6 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
 
     private fun setupViews() {
         binding.btnPark.setOnClickListener {
-//            viewModel.getParkingLotOccupancyStatus()
-//            listenForParkingLotStatusToPark()
             navigateToVehicleFragment()
         }
         binding.btnshowStatus.setOnClickListener {
@@ -58,23 +56,8 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         }
         binding.btnUnPark.setOnClickListener {
             viewModel.getParkedSpaces()
-            listenForParkedSpaces()
         }
-    }
-
-    private fun listenForParkingLotStatusToPark() {
-        lifecycleScope.launch {
-            viewModel.isParkingLotFullFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    if(!it)
-                        navigateToVehicleFragment()
-                    else
-                        Snackbar.make(
-                            requireView(),
-                            "Parking Lot is Full. Try after some time", LENGTH_SHORT
-                        ).show()
-                }
-        }
+        listenForParkedSpaces()
     }
 
     private fun listenForParkedSpaces() {

@@ -5,6 +5,8 @@ import com.example.parkingapp.feature_parking.domain.model.ParkingLotConfig
 import com.example.parkingapp.feature_parking.domain.model.ParkingSpace
 import com.example.parkingapp.feature_parking.domain.util.ParkingSpaceUtil.getCharForNumber
 import com.example.parkingapp.feature_parking.domain.util.VehicleType
+import java.lang.Math.round
+import kotlin.math.roundToInt
 
 class ParkingLotManager(private val parkingLotConfig: ParkingLotConfig) {
 
@@ -44,10 +46,6 @@ class ParkingLotManager(private val parkingLotConfig: ParkingLotConfig) {
 
 
                 if (start in startIndexOfVehicleType..endIndexOfVehicleType && end in startIndexOfVehicleType..endIndexOfVehicleType) {
-                    Log.d(
-                        "If $vehicleType",
-                        " [ $startIndexOfVehicleType - $endIndexOfVehicleType  ] "
-                    )
 
                     for (i in start..end) {
                         val parkingSpace = ParkingSpace(
@@ -58,12 +56,7 @@ class ParkingLotManager(private val parkingLotConfig: ParkingLotConfig) {
                         countFilled++
                     }
 
-                    Log.d("Count Filled - ", countFilled.toString())
                 } else if (start in startIndexOfVehicleType..endIndexOfVehicleType) {
-                    Log.d(
-                        "Else If $vehicleType",
-                        " [ $startIndexOfVehicleType - $endIndexOfVehicleType  ] "
-                    )
 
                     for (i in start..endIndexOfVehicleType){
                         val parkingSpace = ParkingSpace(
@@ -74,12 +67,7 @@ class ParkingLotManager(private val parkingLotConfig: ParkingLotConfig) {
                         countFilled++
                     }
 
-                    Log.d("Count Filled - ", countFilled.toString())
                 } else if (end in startIndexOfVehicleType..endIndexOfVehicleType) {
-                    Log.d(
-                        "Else $vehicleType",
-                        " [ $startIndexOfVehicleType - $endIndexOfVehicleType  ] "
-                    )
 
                     for (i in startIndexOfVehicleType..end) {
                         val parkingSpace = ParkingSpace(
@@ -90,13 +78,8 @@ class ParkingLotManager(private val parkingLotConfig: ParkingLotConfig) {
                         countFilled++
                     }
 
-                    Log.d("Count Filled - ", countFilled.toString())
                 }
                 else if(startIndexOfVehicleType > start && endIndexOfVehicleType < end){
-                    Log.d(
-                        "Nothing Else $vehicleType",
-                        " [ $startIndexOfVehicleType - $endIndexOfVehicleType  ] "
-                    )
 
                     for (i in startIndexOfVehicleType..endIndexOfVehicleType) {
                         val parkingSpace = ParkingSpace(
@@ -106,8 +89,6 @@ class ParkingLotManager(private val parkingLotConfig: ParkingLotConfig) {
                         resultList.add(parkingSpace)
                         countFilled++
                     }
-
-                    Log.d("Count Filled - ", countFilled.toString())
                 }
             }
         }
@@ -132,7 +113,7 @@ class ParkingLotManager(private val parkingLotConfig: ParkingLotConfig) {
         vehicleTypes.forEach {
             val name = it.name
             val percentage = it.allocationPercentage
-            val allocationCount = (parkingSpacesCount * percentage.toInt()) / 100
+            val allocationCount = allocationCount(percentage)
 
             map[name] = arrayOf(startNum, startNum + allocationCount - 1)
             startNum += allocationCount
@@ -142,7 +123,12 @@ class ParkingLotManager(private val parkingLotConfig: ParkingLotConfig) {
                 " [ ${map[name]?.get(0)} - ${map[name]?.get(1)}] "
             )
         }
+
         return map.toMap()
+    }
+
+    private fun allocationCount(percentage: Float): Int {
+       return ((parkingSpacesCount * percentage) / 100).roundToInt()
     }
 
 }
