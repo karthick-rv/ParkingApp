@@ -1,106 +1,156 @@
 package com.example.parkingapp.feature_parking.presentation.parking_lot
 
 import android.os.Bundle
-import android.view.Gravity.CENTER
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.GridLayout
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.example.parkingapp.databinding.FragmentParkingLotBinding
-import com.example.parkingapp.feature_parking.domain.model.ParkingLot
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+import androidx.recyclerview.widget.RecyclerView
 import com.example.parkingapp.R
-import com.example.parkingapp.databinding.ItemParkingSpaceBinding
-import com.example.parkingapp.feature_parking.domain.model.Floor
+import com.example.parkingapp.databinding.FragmentParkingLotNewBinding
+import com.example.parkingapp.feature_parking.common.Resource
+import com.example.parkingapp.feature_parking.domain.model.LoadingInfo
+import com.example.parkingapp.feature_parking.domain.model.ParkingSpace
+import com.example.parkingapp.feature_parking.domain.use_case.ParkingLotManager
+import com.example.parkingapp.feature_parking.domain.util.ParkingSpaceUtil
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-class ParkingLotFragment :Fragment(){
+class ParkingLotFragment : Fragment() {
 
-    private lateinit var binding: FragmentParkingLotBinding
-    private lateinit var parkingLot: ParkingLot
-
-    companion object{
-        const val PARKING_LOT = "parkingLot"
+    private lateinit var binding: FragmentParkingLotNewBinding
+    private val parkingLotAdapter by lazy {
+        ParkingLotRecyclerViewAdapter()
     }
+    private val viewModel by activityViewModels<ParkingLotViewModel>()
+    var isLoading = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentParkingLotBinding.inflate(layoutInflater, container, false)
-        parkingLot = arguments?.getSerializable(PARKING_LOT) as ParkingLot
-        addParkingLot(inflater)
+        binding = FragmentParkingLotNewBinding.inflate(inflater, container, false)
+        listenForParkingSpaces()
         setupViews()
+        initScrollListener()
         return binding.root
     }
 
-    private fun setupViews() {
-        binding.btnContinue.setOnClickListener {
-            findNavController().navigate(R.id.action_parkingLotFragment_to_welcomeFragment)
-        }
-    }
+    private fun listenForParkingSpaces() {
+        lifecycleScope.launch {
+            viewModel.parkedSpacesFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    when (it) {
+                        is Resource.Error -> TODO()
+                        is Resource.Loading -> TODO()
+                        is Resource.Success -> {
+                            it.data?.let { it1 -> setRecyclerViewItems(it1) }
+                        }
+                    }
 
-    private fun addParkingLot(inflater: LayoutInflater) {
-        val layout = binding.floorLayout
-        parkingLot.floors.forEach{
-            val floorLayout = createFloor(it, inflater)
-            layout.addView(floorLayout)
-        }
-    }
-
-    private fun createFloor(floor: Floor, inflater: LayoutInflater): LinearLayout {
-        val floorLayout = LinearLayout(requireContext()).apply {
-            id = floor.name.toInt()
-            orientation = LinearLayout.VERTICAL
-            layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-        }
-
-        val textView = TextView(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-            gravity = CENTER
-            setPadding(10)
-            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_200))
-            setTextColor(resources.getColor(R.color.black))
-            textSize = 16F
-            text = floor.name.toString()
-        }
-
-        val spaceLayout = createSpacesForFloor(floor, inflater)
-        floorLayout.addView(textView)
-        floorLayout.addView(spaceLayout)
-        return floorLayout
-    }
-
-    private fun createSpacesForFloor(floor: Floor, inflater: LayoutInflater): GridLayout {
-        val spaceLayout = GridLayout(requireContext()).apply {
-            id = floor.name.toInt()
-            columnCount=6
-        }
-
-        floor.parkingSpaces.forEach{
-            val parkingSpaceView = ItemParkingSpaceBinding.inflate(inflater, spaceLayout, false).apply {
-                tvParkingSpaceName.text = it.name
-                tvParkingSpaceType.text = it.type.name
-                tvVehicleName.text = it.vehicleNum
-                tvTicketNum.visibility = View.GONE
-                it.parkingTicketNum?.let {
-                    tvTicketNum.text = it.toString()
-                    tvTicketNum.visibility = View.VISIBLE
                 }
-                if(!it.free) parkingSpaceLayout.setBackgroundResource(R.drawable.rectangle_shape_grey)
-            }
-            spaceLayout.addView(parkingSpaceView.root)
         }
-        return spaceLayout
+    }
+
+    private fun setupViews() {
+        fetchRecyclerViewItems()
+        binding.parkingLotRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = createLayoutManager()
+            adapter = parkingLotAdapter
+        }
+    }
+
+    private fun createLayoutManager(): GridLayoutManager {
+        val layoutManager = GridLayoutManager(requireContext(), 5)
+        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (parkingLotAdapter.getItemViewType(position)) {
+                    R.layout.item_parking_space -> 1
+                    R.layout.item_floor_name -> 5
+                    else -> 0
+                }
+            }
+        }
+        return layoutManager
+    }
+
+    private fun initScrollListener() {
+        binding.parkingLotRecyclerView.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+
+                if(!isLoading){
+                    if(layoutManager.findLastCompletelyVisibleItemPosition() == parkingLotAdapter.items.size - 1){
+
+                        loadMore()
+                        isLoading = true
+                    }
+                }
+            }
+        })
+    }
+
+    private fun fetchRecyclerViewItems() {
+        viewModel.onEvent(ParkingLotEvent.ShowParkingLot(LoadingInfo(1, 0)))
+    }
+
+    private fun loadMore() {
+
+        val currentFloorIndex = viewModel.currentLoadingInfo.floorIndex
+        val currentLoadIndex = viewModel.currentLoadingInfo.loadIndex
+        val floorCount = viewModel.getFloorCount()
+        val parkingSpaceCount = viewModel.getParkingSpaceCount(1)
+        val loadCount = parkingSpaceCount / ParkingLotManager.COUNT_PER_LOAD
+        val loadCountRem = parkingSpaceCount % ParkingLotManager.COUNT_PER_LOAD
+
+        if(loadCountRem>0 && currentLoadIndex == loadCount -1){
+            viewModel.onEvent(ParkingLotEvent.ShowParkingLot(LoadingInfo(currentFloorIndex, currentLoadIndex + 1, loadCountRem)))
+        }else if(currentLoadIndex < loadCount - 1){
+            viewModel.onEvent(ParkingLotEvent.ShowParkingLot(LoadingInfo(currentFloorIndex, currentLoadIndex + 1)))
+        }
+        else if(currentFloorIndex < floorCount){
+            viewModel.onEvent(ParkingLotEvent.ShowParkingLot(LoadingInfo(currentFloorIndex + 1, 0)))
+        }
+    }
+
+
+    private fun setRecyclerViewItems(parkingSpaces: List<ParkingSpace>) {
+        val itemList = mutableListOf<ParkingSpaceRecyclerViewItem>()
+        if (viewModel.currentLoadingInfo.loadIndex == 0) {
+            itemList.add(
+                ParkingSpaceRecyclerViewItem.FloorItem(
+                    ParkingSpaceUtil.getCharForNumber(
+                        viewModel.currentLoadingInfo.floorIndex
+                    ).toString()
+                )
+            )
+        }
+
+        parkingSpaces.forEach {
+            itemList.add(ParkingSpaceRecyclerViewItem.ParkingSpaceItem(it))
+        }
+
+        val position = parkingLotAdapter.items.size
+        parkingLotAdapter.items.addAll(itemList)
+        binding.parkingLotRecyclerView.recycledViewPool.clear()
+        binding.parkingLotRecyclerView.post {
+//            parkingLotAdapter.notifyItemInserted(position)
+            parkingLotAdapter.notifyDataSetChanged()
+        }
+        isLoading = false
     }
 
 }

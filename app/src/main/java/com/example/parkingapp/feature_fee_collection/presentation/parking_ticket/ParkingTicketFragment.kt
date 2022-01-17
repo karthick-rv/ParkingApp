@@ -50,26 +50,13 @@ class ParkingTicketFragment : Fragment() {
                 navigateToPaymentFragment(args.parkingTicket.ticketId)
             }
         } ?: binding.btnViewParkingLotOrPayment.setOnClickListener {
-            parkingLotViewModel.onEvent(ParkingLotEvent.ShowParkingLot)
-            listenForParkingLot()
+            navigateToParkingLotFragment()
         }
     }
 
-    private fun listenForParkingLot() {
-        lifecycleScope.launch {
-            parkingLotViewModel.parkingLotFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    if (it is Resource.Success)
-                        it.data?.let { it1 -> navigateToParkingLotFragment(it1) }
-                }
-        }
-    }
-
-    private fun navigateToParkingLotFragment(parkingLot: ParkingLot) {
+    private fun navigateToParkingLotFragment() {
         val action =
-            ParkingTicketFragmentDirections.actionParkingTicketFragmentToParkingLotFragment(
-                parkingLot = parkingLot
-            )
+            ParkingTicketFragmentDirections.actionParkingTicketFragmentToParkingLotFragment()
         navigateToFragment(action)
     }
 

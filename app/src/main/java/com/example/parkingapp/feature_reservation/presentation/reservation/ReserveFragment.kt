@@ -16,9 +16,11 @@ import com.example.parkingapp.R
 import com.example.parkingapp.databinding.FragmentReserveBinding
 import com.example.parkingapp.feature_parking.domain.model.Vehicle
 import com.example.parkingapp.feature_parking.domain.util.VehicleType
+import com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotViewModel
 import com.example.parkingapp.feature_reservation.presentation.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -27,6 +29,7 @@ class ReserveFragment: Fragment() {
 
     private lateinit var binding: FragmentReserveBinding
     private val viewModel by activityViewModels<ReservationViewModel>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +42,6 @@ class ReserveFragment: Fragment() {
     }
 
     private fun setupViews() {
-
         val vehicleTypes = VehicleType.values()
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, vehicleTypes)
         binding.vehicleType.setAdapter(arrayAdapter)

@@ -41,6 +41,7 @@ class TransactionsFragment : Fragment() {
         binding = FragmentTransactionsBinding.inflate(inflater, container, false)
         setupViews()
         listenForTransactionData()
+        viewModel.onEvent(TransactionEvent.GetAllTransaction)
         return binding.root
     }
 

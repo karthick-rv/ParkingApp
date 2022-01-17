@@ -11,12 +11,7 @@ import java.lang.IllegalArgumentException
 
 class ParkingLotRecyclerViewAdapter: RecyclerView.Adapter<ParkingLotRecyclerViewHolder>() {
 
-    var items = listOf<ParkingSpaceRecyclerViewItem>()
-    @SuppressLint("NotifyDataSetChanged")
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
+    var items = mutableListOf<ParkingSpaceRecyclerViewItem>()
 
 
     override fun onCreateViewHolder(
@@ -37,6 +32,7 @@ class ParkingLotRecyclerViewAdapter: RecyclerView.Adapter<ParkingLotRecyclerView
     }
 
     override fun onBindViewHolder(holder: ParkingLotRecyclerViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         when(holder){
             is ParkingLotRecyclerViewHolder.FloorNameViewHolder -> holder.bind(items[position] as ParkingSpaceRecyclerViewItem.FloorItem)
             is ParkingLotRecyclerViewHolder.ParkingSpaceViewHolder -> holder.bind(items[position] as ParkingSpaceRecyclerViewItem.ParkingSpaceItem)

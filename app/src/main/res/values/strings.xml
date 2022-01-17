@@ -50,6 +50,7 @@
     <string name="parking">Parking</string>
     <string name="transaction_summary">Transaction Summary</string>
     <string name="ticket_id_tran">Ticket Num - %s</string>
+    <string name="reserve_ticket_id_tran">Reservation Ticket Num - %s</string>
     <string name="vehicle_num_tran">Vehicle Num - %s</string>
     <string name="vehicle_type_tran">Vehicle Type - %s</string>
     <string name="pickup_time_tran">Pickup Time - %s</string>
@@ -64,7 +65,7 @@
     <string name="pick_date_to_reserve">Pick date to reserve</string>
     <string name="parking_space_reservation_details">Parking Space Reservation Details</string>
     <string name="reserve_space">Reserve Space</string>
-    <string name="reserve_date_format">%d - %d - %d </string>
+    <string name="reserve_date_format">%d/%d/%d </string>
     <string name="reservation_fees">Reservation Fees</string>
     <string name="pay_reservation_fees">Pay Reservation Fees</string>
     <string name="reservation_fee">Reservation Fee - </string>
@@ -72,4 +73,10 @@
     <string name="not_reserved">Haven\'t Reserved</string>
     <string name="reservation_ticket_num">Reservation Ticket Number</string>
     <string name="reservation_details">Reservation Details</string>
+    <string name="ticket_num">Ticket Num:</string>
+    <string name="parked_time_">Parked Time:</string>
+    <string name="picked_time">Picked Time:</string>
+    <string name="reserved_date_tran">Reserved Date - %s</string>
+    <string name="reserved">Reserved</string>
+    <string name="from_reserved_space">From reserved space</string>
 </resources>

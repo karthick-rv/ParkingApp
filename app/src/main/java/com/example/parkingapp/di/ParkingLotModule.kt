@@ -8,6 +8,7 @@ import com.example.parkingapp.feature_parking.data.repository.ParkingSpaceReposi
 import com.example.parkingapp.feature_parking.domain.repository.ParkingSpaceRepositoryImpl
 import com.example.parkingapp.feature_parking.domain.use_case.*
 import com.example.parkingapp.feature_parking.presentation.system_create.SystemConfigManager
+import com.example.parkingapp.feature_reservation.data.repository.ReservationTicketRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,13 +37,15 @@ object ParkingLotModule {
 
     @Provides
     @Singleton
-    fun provideParkingUseCases(repository: ParkingSpaceRepository, parkingTicketRepository: ParkingTicketRepository): ParkingUseCases {
+    fun provideParkingUseCases(repository: ParkingSpaceRepository, parkingTicketRepository: ParkingTicketRepository, reservationTicketRepository: ReservationTicketRepository): ParkingUseCases {
         return ParkingUseCases(
             createParkingLot = CreateParkingLot(),
-            getAllotmentStatus = GetAllotmentStatus(repository),
-            parkVehicle = ParkVehicle(repository, parkingTicketRepository),
+            getAllotmentStatus = GetAllotmentStatus(repository, reservationTicketRepository),
+            parkVehicle = ParkVehicle(repository, parkingTicketRepository, reservationTicketRepository),
             unParkVehicle = UnParkVehicle(repository, parkingTicketRepository),
-            getParkedSpaces = GetParkedSpaces(repository)
+            getParkedSpaces = GetParkedSpaces(repository),
+            parkOnReservedSpace = ParkOnReservedSpace(repository, reservationTicketRepository),
+            unParkFromReservedSpace = UnParkFromReservedSpace(repository, reservationTicketRepository)
         )
     }
 

@@ -13,9 +13,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.parkingapp.R
 import com.example.parkingapp.databinding.FragmentReservationPaymentBinding
+import com.example.parkingapp.feature_parking.common.Resource
 import com.example.parkingapp.feature_reservation.domain.model.ReservationTicket
 import com.example.parkingapp.feature_reservation.presentation.ReservationViewModel
 import com.example.parkingapp.feature_reservation.presentation.reservation.ReservationEvent
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -50,7 +52,16 @@ class ReservationPaymentFragment: Fragment() {
         lifecycleScope.launch {
             viewModel.reservationTicket.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                   navigateToReservationTicketFragment(it)
+                    when(it){
+                        is Resource.Error -> {
+                            Snackbar.make(requireView(), it.message.toString(), Snackbar.LENGTH_SHORT)
+                                .show()
+                        }
+                        is Resource.Loading -> TODO()
+                        is Resource.Success -> {
+                            it.data?.let { ticket -> navigateToReservationTicketFragment(ticket) }
+                        }
+                    }
                 }
         }
     }

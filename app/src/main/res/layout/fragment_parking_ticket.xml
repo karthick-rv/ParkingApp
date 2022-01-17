@@ -40,73 +40,149 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.1" />
 
-        <TextView
-            android:id="@+id/vehicleNum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="start"
-            android:text="@{Html.fromHtml(String.format(@string/vehicle_number_value, parkingTicket.vehicleNum))}"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTicketNum"
-            tools:text="@string/vehicle_number" />
 
-        <TextView
-            android:id="@+id/vehicleType"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="start"
-            android:text="@{Html.fromHtml(String.format(@string/vehicle_type_value, parkingTicket.vehicleType))}"
-            android:textSize="18sp"
+            android:background="@drawable/rectangle_shape"
+            android:orientation="vertical"
+            android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.505"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vehicleNum"
-            tools:text="@string/vehicle_type" />
+            app:layout_constraintTop_toTopOf="@+id/guideline9">
 
-        <TextView
-            android:id="@+id/tvTicketNum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="start"
-            android:text="@{Html.fromHtml(String.format(@string/ticket_number_value, parkingTicket.ticketId))}"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline9"
-            tools:text="@string/ticket_number" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100">
 
-        <TextView
-            android:id="@+id/parkedTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="start"
-            android:text="@{Html.fromHtml(String.format(@string/parked_time_value, parkingTicket.parkedTime))}"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vehicleType"
-            tools:text="@string/parked_time" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Vehicle Num :"
+                    android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/pickupTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="start"
-            android:text="@{Html.fromHtml(String.format(@string/pickup_time_value, parkingTicket.pickUpTime))}"
-            android:textSize="18sp"
-            android:visibility="@{parkingTicket.pickUpTime==null ? View.GONE : View.VISIBLE}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/parkedTime"
-            tools:text="@string/pickup_time" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="start"
+                    android:text="@{parkingTicket.vehicleNum}"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Vehicle Type :"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="start"
+                    android:text="@{parkingTicket.vehicleType.name()}"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="@string/ticket_num"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="start"
+                    android:text="@{Long.toString(parkingTicket.ticketId)}"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="@string/parked_time_"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="start"
+                    android:text="@{parkingTicket.parkedTime}"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:visibility="@{parkingTicket.pickUpTime==null ? View.GONE : View.VISIBLE}"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="@string/picked_time"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="start"
+                    android:text="@{parkingTicket.pickUpTime}"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline9"
@@ -145,14 +221,13 @@
             android:id="@+id/durationLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
             android:orientation="horizontal"
-            android:weightSum="100"
             android:visibility="@{parkingTicket.pickUpTime!=null ? View.VISIBLE : View.GONE}"
+            android:weightSum="100"
             app:layout_constraintBottom_toTopOf="@+id/btnViewParkingLotOrPayment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pickupTime">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
             <TextView
                 android:layout_width="0dp"
@@ -161,19 +236,19 @@
                 android:gravity="end"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-                android:textSize="18sp"
-                android:text="@string/duration"/>
+                android:text="@string/duration"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/durationValue"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="60"
-                android:textSize="18sp"
                 android:gravity="start"
-                android:textStyle="bold"
+                android:text="@{parkingTicket.duration}"
                 android:textColor="@color/green"
-                android:text="@{parkingTicket.duration}"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeeCollectionViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val feeCollectionUseCases: FeeCollectionUseCases
 ) : ViewModel() {
 
@@ -29,22 +28,11 @@ class FeeCollectionViewModel @Inject constructor(
     private val _paymentDetailFlow: MutableSharedFlow<PaymentDetailUiEvent> = MutableSharedFlow()
     val paymentDetailFlow: SharedFlow<PaymentDetailUiEvent> = _paymentDetailFlow
 
-    init {
-        savedStateHandle.get<Long>(ParkingTicketFragment.PARKING_TICKET_ID)?.let {
-            viewModelScope.launch {
-                ticket = feeCollectionUseCases.getTicketDetails(it)
-                pickupTime = DateUtil.getCurrentDateTime()
-                duration = DateUtil.getDuration(ticket.parkedTime, pickupTime)
-                val paymentDetail = feeCollectionUseCases.calculateFees(ticket, duration, null)
-                totalAmount = paymentDetail.totalFee
-                _paymentDetailFlow.emit(PaymentDetailUiEvent.CalculationSuccess(paymentDetail))
-            }
-        }
-    }
-
-
     fun onEvent(paymentDetailEvent: PaymentDetailEvent){
         when(paymentDetailEvent){
+            is PaymentDetailEvent.CalculateFees ->{
+                calculateParkingFees(paymentDetailEvent.ticketId)
+            }
             is PaymentDetailEvent.ApplyCoupon -> {
                 validateAndApplyCoupon(paymentDetailEvent)
             }
@@ -56,6 +44,15 @@ class FeeCollectionViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun calculateParkingFees(it: Long) = viewModelScope.launch {
+        ticket = feeCollectionUseCases.getTicketDetails(it)
+        pickupTime = DateUtil.getCurrentDateTime()
+        duration = DateUtil.getDuration(ticket.parkedTime, pickupTime)
+        val paymentDetail = feeCollectionUseCases.calculateFees(ticket, duration, null)
+        totalAmount = paymentDetail.totalFee
+        _paymentDetailFlow.emit(PaymentDetailUiEvent.CalculationSuccess(paymentDetail))
     }
 
     private fun validateAndApplyCoupon(paymentDetailEvent: PaymentDetailEvent.ApplyCoupon) {

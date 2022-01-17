@@ -5,35 +5,52 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.parkingapp.R
+import com.example.parkingapp.databinding.ItemFloorNameBinding
+import com.example.parkingapp.databinding.ItemParkingSpaceBinding
 import com.example.parkingapp.databinding.TransactionItemBinding
+import com.example.parkingapp.databinding.TransactionReservationItemBinding
 import com.example.parkingapp.feature_fee_collection.domain.model.ParkingTicket
+import com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotRecyclerViewHolder
+import com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingSpaceRecyclerViewItem
+import java.lang.IllegalArgumentException
 
-class TransactionAdapter : RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
+class TransactionAdapter : RecyclerView.Adapter<TransactionRecyclerViewHolder>() {
 
-    private lateinit var parkingTickets: List<ParkingTicket>
+    private lateinit var tickets: List<TransactionRecyclerViewItem>
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = DataBindingUtil.inflate<TransactionItemBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.transaction_item,
-            parent,
-            false
-        )
-        return ViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionRecyclerViewHolder {
+        return when(viewType){
+            R.layout.transaction_item -> {
+                TransactionRecyclerViewHolder.ParkingTicketViewHolder(
+                    TransactionItemBinding.inflate(LayoutInflater.from(parent.context), parent,false ))
+            }
+
+            R.layout.transaction_reservation_item -> TransactionRecyclerViewHolder.ReservationTicketViewHolder(
+                TransactionReservationItemBinding.inflate(LayoutInflater.from(parent.context), parent,false ))
+
+            else -> throw IllegalArgumentException("Invalid ViewType Provided")
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val parkingTicket = parkingTickets[position]
-        holder.binding.parkingTicket = parkingTicket
+    override fun onBindViewHolder(holder: TransactionRecyclerViewHolder, position: Int) {
+        when(holder){
+            is TransactionRecyclerViewHolder.ParkingTicketViewHolder -> holder.bind(tickets[position] as TransactionRecyclerViewItem.ParkingTicketItem)
+            is TransactionRecyclerViewHolder.ReservationTicketViewHolder -> holder.bind(tickets[position] as TransactionRecyclerViewItem.ReservationTicketItem)
+        }
     }
 
     override fun getItemCount(): Int {
-        return parkingTickets.size
+        return tickets.size
     }
 
-    fun setParkingTickets(parkingTickets: List<ParkingTicket>){
-        this.parkingTickets = parkingTickets
+    fun setParkingTickets(parkingTickets: List<TransactionRecyclerViewItem>){
+        this.tickets = parkingTickets
     }
 
-    class ViewHolder(val binding: TransactionItemBinding) : RecyclerView.ViewHolder(binding.root)
+    override fun getItemViewType(position: Int): Int {
+        return when(tickets[position]){
+            is TransactionRecyclerViewItem.ParkingTicketItem -> R.layout.transaction_item
+            is TransactionRecyclerViewItem.ReservationTicketItem -> R.layout.transaction_reservation_item
+        }
+    }
 }

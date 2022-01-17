@@ -8,4 +8,5 @@ data class Vehicle (
     val parkingSpaceNum: String,
     val type: VehicleType,
     val parkingTicketNum: String? = null,
+    val reservationTicketNum: String? = null
 )

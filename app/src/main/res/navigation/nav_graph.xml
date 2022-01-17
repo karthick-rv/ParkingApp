@@ -25,7 +25,7 @@
             app:destination="@id/vehicleFragment" />
         <action
             android:id="@+id/action_welcomeFragment_to_parkingLotFragment"
-            app:destination="@id/parkingLotFragmentNew" />
+            app:destination="@id/parkingLotFragment" />
         <action
             android:id="@+id/action_welcomeFragment_to_unParkFragment"
             app:destination="@id/unParkFragment" />
@@ -39,15 +39,15 @@
             android:id="@+id/action_vehicleFragment_to_parkingTicketFragment"
             app:destination="@id/parkingTicketFragment"
             app:popUpTo="@id/welcomeFragment" />
+        <action
+            android:id="@+id/action_vehicleFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/parkingLotFragment"
         android:name="com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotFragment"
         android:label="ParkingLotFragment"
         tools:layout="@layout/fragment_parking_lot">
-        <argument
-            android:name="parkingLot"
-            app:argType="com.example.parkingapp.feature_parking.domain.model.ParkingLot" />
         <action
             android:id="@+id/action_parkingLotFragment_to_welcomeFragment"
             app:destination="@id/welcomeFragment"
@@ -63,6 +63,9 @@
             android:id="@+id/action_unParkFragment_to_parkingTicketFragment"
             app:destination="@id/parkingTicketFragment"
             app:popUpTo="@id/welcomeFragment" />
+        <action
+            android:id="@+id/action_unParkFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/parkingTicketFragment"
@@ -131,7 +134,8 @@
         tools:layout="@layout/fragment_reserve">
         <action
             android:id="@+id/action_reserveFragment_to_reservationPaymentFragment"
-            app:destination="@id/reservationPaymentFragment"/>
+            app:destination="@id/reservationPaymentFragment"
+            app:popUpTo="@id/reservationWelcomeFragment"/>
     </fragment>
     <fragment
         android:id="@+id/reservationPaymentFragment"
@@ -169,13 +173,5 @@
             app:destination="@id/reservationWelcomeFragment"
             app:popUpTo="@id/reservationWelcomeFragment"
             app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/parkingLotFragmentNew"
-        android:name="com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotFragmentNew"
-        android:label="ParkingLotFragmentNew" >
-        <argument
-            android:name="parkingLot"
-            app:argType="com.example.parkingapp.feature_parking.domain.model.ParkingLot" />
     </fragment>
 </navigation>

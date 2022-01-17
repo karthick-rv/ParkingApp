@@ -91,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
-                android:text="@string/already_reserved" />
+                android:text="@string/from_reserved_space" />
         </RadioGroup>
 
         <androidx.constraintlayout.widget.Guideline

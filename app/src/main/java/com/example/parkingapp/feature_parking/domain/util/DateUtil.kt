@@ -6,17 +6,21 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+@SuppressLint("SimpleDateFormat")
 object DateUtil {
 
     private const val datePattern = "dd/M/yyyy hh:mm:ss a"
 
-    @SuppressLint("SimpleDateFormat")
     fun getCurrentDateTime(): String {
         val formatter = SimpleDateFormat(datePattern)
         return formatter.format(Date())
     }
 
-    @SuppressLint("SimpleDateFormat")
+    fun dateToMillis(date: String): Long {
+        val sdf = SimpleDateFormat(datePattern.split(" ")[0])
+        return sdf.parse(date).time
+    }
+
     fun getDuration(parkedTime: String, pickUpTime: String): ParkedDuration{
         val formatter: DateFormat = SimpleDateFormat(datePattern)
         val parked = formatter.parse(parkedTime)!!

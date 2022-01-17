@@ -1,6 +1,7 @@
 package com.example.parkingapp.di
 
 import com.example.parkingapp.feature_parking.data.data_source.ParkingLotDatabase
+import com.example.parkingapp.feature_parking.data.repository.ParkingSpaceRepository
 import com.example.parkingapp.feature_reservation.data.repository.ReservationTicketRepository
 import com.example.parkingapp.feature_reservation.domain.repository.ReservationTicketRepositoryImpl
 import com.example.parkingapp.feature_reservation.domain.use_case.CalculateReservationFees
@@ -25,9 +26,9 @@ object ReservationModule {
 
     @Provides
     @Singleton
-    fun provideReservationUseCases(reservationTicketRepository: ReservationTicketRepository): ReservationUseCases{
+    fun provideReservationUseCases(reservationTicketRepository: ReservationTicketRepository, parkingSpaceRepository: ParkingSpaceRepository): ReservationUseCases{
         return ReservationUseCases(
-            reserveParkingSpace = ReserveParkingSpace(reservationTicketRepository),
+            reserveParkingSpace = ReserveParkingSpace(reservationTicketRepository, parkingSpaceRepository),
             calculateReservationFees = CalculateReservationFees(),
             unReserveParkingSpace = UnReserveParkingSpace(reservationTicketRepository)
         )

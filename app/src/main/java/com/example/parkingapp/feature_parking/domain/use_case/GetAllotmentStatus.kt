@@ -1,42 +1,72 @@
 package com.example.parkingapp.feature_parking.domain.use_case
 
+import android.text.format.DateUtils
 import com.example.parkingapp.feature_parking.data.repository.ParkingSpaceRepository
+import com.example.parkingapp.feature_parking.domain.model.LoadingInfo
 import com.example.parkingapp.feature_parking.domain.model.ParkingLot
+import com.example.parkingapp.feature_parking.domain.model.ParkingSpace
+import com.example.parkingapp.feature_parking.domain.util.DateUtil
+import com.example.parkingapp.feature_reservation.data.repository.ReservationTicketRepository
+import com.example.parkingapp.feature_reservation.domain.model.ReservationTicket
+import java.util.*
 
 
-class GetAllotmentStatus(private val repository: ParkingSpaceRepository) {
+class GetAllotmentStatus(
+    private val repository: ParkingSpaceRepository,
+    private val reservationTicketRepository: ReservationTicketRepository
+) {
 
-    suspend operator fun invoke(parkingLot: ParkingLot): ParkingLot{
+    suspend operator fun invoke(
+        parkingLotManager: ParkingLotManager,
+        loadingInfo: LoadingInfo
+    ): List<ParkingSpace> {
+
+        val parkingSpaces = parkingLotManager.getParkingSpaces(
+            loadingInfo.floorIndex,
+            loadingInfo.loadIndex,
+            loadingInfo.loadRem
+        )
 
         val parkedSpaces = repository.getAllSpaces()
+        val reservationTickets = reservationTicketRepository.getAllTickets()
 
-        parkedSpaces.forEach { parkingSpace ->
-            val floorName = parkingSpace.floorName
-            val parkingSpaceNumber = parkingSpace.name.substring(1).toInt()
+            parkingSpaces.map { parkingSpace ->
+                val parkedSpace = parkedSpaces.find { space -> space.name == parkingSpace.name }
 
-            val floor = parkingLot.floors.first { floor -> floor.name == floorName }
-            val space = floor.parkingSpaces[parkingSpaceNumber - 1]
+                val reservedSpace = reservationTickets.find {
+                        ticket -> ticket.parkingSpaceName == parkingSpace.name
+                        &&  DateUtils.isToday(DateUtil.dateToMillis(ticket.date))
+                }
 
-            space.apply {
-                free = parkingSpace.free
-                vehicleNum = parkingSpace.vehicleNum
-                parkingTicketNum = parkingSpace.parkingTicketNum
+                reservedSpace?.let {
+                    parkingSpace.apply {
+                        reservationTicketNum = it.ticketId.toFloat()
+                        vehicleNum = it.vehicleNum
+                        isReserved = true
+                    }
+                }
+
+                parkedSpace?.let {
+                    parkingSpace.apply {
+                        free = it.free
+                        parkingTicketNum = it.parkingTicketNum
+                        vehicleNum = it.vehicleNum
+                    }
+                }
             }
-        }
-        updateFloorStatus(parkingLot)
-        updateParkingLotStatus(parkingLot)
-        return parkingLot
+        return parkingSpaces
     }
+
 
     private fun updateFloorStatus(parkingLot: ParkingLot) {
         parkingLot.floors.forEach {
             val freeSpaces = it.parkingSpaces.filter { parkingSpace -> parkingSpace.free }
-            if(freeSpaces.isEmpty()) it.isFull = true
+            if (freeSpaces.isEmpty()) it.isFull = true
         }
     }
 
     private fun updateParkingLotStatus(parkingLot: ParkingLot) {
         val floorWithSpaces = parkingLot.floors.filter { floor -> !floor.isFull }
-        if(floorWithSpaces.isEmpty()) parkingLot.isFull = true
+        if (floorWithSpaces.isEmpty()) parkingLot.isFull = true
     }
 }

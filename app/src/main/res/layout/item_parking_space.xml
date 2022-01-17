@@ -1,63 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parkingSpaceLayout"
-    android:background="@drawable/rectangle_shape"
-    android:orientation="vertical"
-    android:layout_width="50dp"
-    android:layout_height="100dp"
-    android:layout_margin="10dp">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/tvParkingSpaceName"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/parkingSpaceLayout"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        tools:text="PS"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-    />
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:background="@drawable/rectangle_shape"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvParkingSpaceType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@color/red"
-        tools:text="CAR"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        />
+        <TextView
+            android:id="@+id/reserved"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textColor="#8c2a6f"
+            android:textSize="8sp"
+            android:text="@string/reserved"
+            android:textAllCaps="true"
+            android:visibility="invisible"
+            android:textStyle="bold"
+            tools:text="Reserved" />
+        <TextView
+            android:id="@+id/tvParkingSpaceName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            tools:text="PS" />
 
-    <TextView
-        android:id="@+id/tvTicketNum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="10sp"
-        android:textColor="@color/black"
-        tools:text=""
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        />
+        <TextView
+            android:id="@+id/tvParkingSpaceType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            tools:text="CAR" />
 
-    <TextView
-        android:id="@+id/tvVehicleName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="10sp"
-        android:textColor="#8c2a6f"
-        tools:text=""
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        />
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvTicketNum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:text="" />
+
+        <TextView
+            android:id="@+id/tvVehicleName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="#8c2a6f"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:text="" />
+    </LinearLayout>
 </layout>

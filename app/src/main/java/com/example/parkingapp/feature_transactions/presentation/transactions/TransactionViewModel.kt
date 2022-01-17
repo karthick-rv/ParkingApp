@@ -19,17 +19,16 @@ class TransactionViewModel @Inject constructor(private val transactionUseCases: 
     val transactionDataFlow: SharedFlow<Resource<TransactionData>> = _transactionDataFlow
 
 
-    init {
-        viewModelScope.launch {
-           _transactionDataFlow.emit(Resource.Success(transactionUseCases.getTransactionData(TransactionsFragment.ALL_VEHICLE_TYPE)))
-        }
-    }
-
     fun onEvent(transactionEvent: TransactionEvent){
         when(transactionEvent){
             is TransactionEvent.GetTransactionForVehicleType -> {
                 viewModelScope.launch {
                     _transactionDataFlow.emit(Resource.Success(transactionUseCases.getTransactionData(transactionEvent.vehicleType)))
+                }
+            }
+            TransactionEvent.GetAllTransaction -> {
+                viewModelScope.launch {
+                    _transactionDataFlow.emit(Resource.Success(transactionUseCases.getTransactionData(TransactionsFragment.ALL_VEHICLE_TYPE)))
                 }
             }
         }

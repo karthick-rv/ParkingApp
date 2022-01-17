@@ -1,6 +1,5 @@
 package com.example.parkingapp.feature_reservation.presentation.unreserve
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.parkingapp.R
 import com.example.parkingapp.databinding.FragmentUnreserveBinding
+import com.example.parkingapp.feature_fee_collection.domain.util.DialogUtil
 import com.example.parkingapp.feature_parking.domain.model.Vehicle
 import com.example.parkingapp.feature_parking.domain.util.VehicleType
 import com.example.parkingapp.feature_reservation.presentation.ReservationViewModel
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class UnReserveFragment: Fragment() {
+class UnReserveFragment : Fragment() {
 
     private lateinit var binding: FragmentUnreserveBinding
     private val viewModel by activityViewModels<ReservationViewModel>()
@@ -41,7 +41,7 @@ class UnReserveFragment: Fragment() {
         binding.btnUnReserve.setOnClickListener {
             val parkingTicketNum = binding.txtInpTicketNum.editText?.text.toString()
             val vehicleNum = binding.txtVehicleNum.editText?.text.toString()
-            val vehicle = Vehicle(vehicleNum,"", "", VehicleType.CAR,parkingTicketNum)
+            val vehicle = Vehicle(vehicleNum, "", "", VehicleType.CAR, parkingTicketNum)
             viewModel.onEvent(ReservationEvent.UnReserveParkingSpace(vehicle))
             listenForUnReserveResult()
         }
@@ -51,25 +51,24 @@ class UnReserveFragment: Fragment() {
         lifecycleScope.launch {
             viewModel.unReserveResult.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    if(it) showDialog()
+                    if (it) showDialog()
                 }
         }
     }
 
     private fun showDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Vehicle UnReserved")
-        builder.setMessage("Your amount will be refunded to your account. Thank you")
-        builder.setPositiveButton("Okay") { dialog, _ ->
-            dialog.dismiss()
-            navigateToWelcomeFragment()
-        }
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
+        val alertDialog = DialogUtil.create(
+            requireContext(),
+            "Vehicle UnReserved",
+            "Your amount will be refunded to your account. Thank you",
+            "Okay"
+        ) { navigateToWelcomeFragment() }
+        alertDialog.show()
     }
 
     private fun navigateToWelcomeFragment() {
-        val action = UnReserveFragmentDirections.actionUnReserveFragmentToReservationWelcomeFragment()
+        val action =
+            UnReserveFragmentDirections.actionUnReserveFragmentToReservationWelcomeFragment()
         val controller = findNavController()
         if (controller.currentDestination?.id == R.id.unReserveFragment) {
             controller.navigate(action)

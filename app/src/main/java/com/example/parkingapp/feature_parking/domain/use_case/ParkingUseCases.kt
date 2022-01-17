@@ -5,5 +5,7 @@ data class ParkingUseCases(
     val getAllotmentStatus: GetAllotmentStatus,
     val parkVehicle: ParkVehicle,
     val unParkVehicle: UnParkVehicle,
-    val getParkedSpaces: GetParkedSpaces
+    val getParkedSpaces: GetParkedSpaces,
+    val parkOnReservedSpace: ParkOnReservedSpace,
+    val unParkFromReservedSpace: UnParkFromReservedSpace
 )

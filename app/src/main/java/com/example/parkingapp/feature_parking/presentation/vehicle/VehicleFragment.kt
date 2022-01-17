@@ -14,8 +14,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.parkingapp.R
 import com.example.parkingapp.databinding.FragmentVehicleBinding
 import com.example.parkingapp.feature_fee_collection.domain.model.ParkingTicket
+import com.example.parkingapp.feature_fee_collection.domain.util.DialogUtil
 import com.example.parkingapp.feature_parking.common.Resource
-import com.example.parkingapp.feature_parking.domain.model.ParkingLot
 import com.example.parkingapp.feature_parking.domain.model.Vehicle
 import com.example.parkingapp.feature_parking.domain.util.VehicleType
 import com.example.parkingapp.feature_parking.presentation.parking_lot.ParkingLotEvent
@@ -56,9 +56,18 @@ class VehicleFragment : Fragment() {
             val vehicleNum = binding.txtInpVehicleNum.editText?.text.toString()
             val vehicleName = binding.txtInpVehicleModel.editText?.text.toString()
 
-            val vehicle = Vehicle(vehicleNum, vehicleName, "", VehicleType.valueOf(vehicleType))
-            viewModel.onEvent(ParkingLotEvent.Park(vehicle, binding.radioBtnAlreadyReserved.isChecked))
-            listenForParkingTicket()
+            val isReserveChecked = binding.radioBtnAlreadyReserved.isChecked
+            val vehicle: Vehicle
+            if (!isReserveChecked){
+                vehicle = Vehicle(vehicleNum, vehicleName, "", VehicleType.valueOf(vehicleType))
+                listenForParkingTicket()
+            }
+            else{
+                vehicle = Vehicle(vehicleNum, "" , "", VehicleType.valueOf(vehicleType), reservationTicketNum = vehicleName)
+                listenForParkOnReservedSpaceResult()
+            }
+
+            viewModel.onEvent(ParkingLotEvent.Park(vehicle, isReserveChecked))
         }
 
         setupRadioButtons()
@@ -89,6 +98,32 @@ class VehicleFragment : Fragment() {
         }
     }
 
+    private fun listenForParkOnReservedSpaceResult() {
+        lifecycleScope.launch {
+            viewModel.parkOnReservedResultFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    if(it){
+                        showDialog()
+                    }else{
+                        Snackbar.make(
+                            requireView(),
+                            "Entered details are invalid. Try again", BaseTransientBottomBar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+        }
+    }
+
+    private fun showDialog() {
+        val alertDialog = DialogUtil.create(
+            requireContext(),
+            "Vehicle Parked",
+            "Your vehicle is successfully parked on the reserved space",
+            "Okay"
+        ) { navigateToWelcomeFragment() }
+        alertDialog.show()
+    }
+
     private fun handleParkingTicketResult(resource: Resource<ParkingTicket>) {
         when (resource) {
             is Resource.Success -> resource.data?.let { navigateToParkingTicketFragment(it) }
@@ -96,7 +131,8 @@ class VehicleFragment : Fragment() {
             }
             is Resource.Error -> {
                 resource.message?.let {
-                    Snackbar.make(requireView(),
+                    Snackbar.make(
+                        requireView(),
                         it, BaseTransientBottomBar.LENGTH_SHORT
                     ).show()
                 }
@@ -105,7 +141,17 @@ class VehicleFragment : Fragment() {
     }
 
     private fun navigateToParkingTicketFragment(parkingTicket: ParkingTicket) {
-        val action = VehicleFragmentDirections.actionVehicleFragmentToParkingTicketFragment(parkingTicket)
+        val action =
+            VehicleFragmentDirections.actionVehicleFragmentToParkingTicketFragment(parkingTicket)
+        val controller = findNavController()
+        if (controller.currentDestination?.id == R.id.vehicleFragment) {
+            controller.navigate(action)
+        }
+    }
+
+    private fun navigateToWelcomeFragment() {
+        val action =
+            VehicleFragmentDirections.actionVehicleFragmentToWelcomeFragment()
         val controller = findNavController()
         if (controller.currentDestination?.id == R.id.vehicleFragment) {
             controller.navigate(action)

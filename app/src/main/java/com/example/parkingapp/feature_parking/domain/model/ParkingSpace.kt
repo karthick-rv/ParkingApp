@@ -14,7 +14,8 @@ data class ParkingSpace(
     var free: Boolean,
     var vehicleNum: String?,
     var parkingTicketNum: Long? = null,
-    var isReserved: Boolean = false
+    var isReserved: Boolean = false,
+    var reservationTicketNum: Float? = null
 ): Serializable
 
 

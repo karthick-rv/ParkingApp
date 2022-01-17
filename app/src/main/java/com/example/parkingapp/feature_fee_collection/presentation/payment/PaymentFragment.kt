@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.parkingapp.R
 import com.example.parkingapp.databinding.FragmentPaymentBinding
 import com.example.parkingapp.feature_fee_collection.domain.model.PaymentDetail
@@ -29,6 +30,7 @@ class PaymentFragment : Fragment() {
 
     private lateinit var binding: FragmentPaymentBinding
     private val viewModel by activityViewModels<FeeCollectionViewModel>()
+    private val args by navArgs<PaymentFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +54,11 @@ class PaymentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        listenForPaymentDetail()
+        viewModel.onEvent(PaymentDetailEvent.CalculateFees(args.parkingTicketId))
+    }
+
+    private fun listenForPaymentDetail() {
         lifecycleScope.launch {
             viewModel.paymentDetailFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {

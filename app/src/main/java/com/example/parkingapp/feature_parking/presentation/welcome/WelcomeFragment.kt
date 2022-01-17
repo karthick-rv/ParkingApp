@@ -49,12 +49,12 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
 
     private fun setupViews() {
         binding.btnPark.setOnClickListener {
-            viewModel.getParkingLotOccupancyStatus()
-            listenForParkingLotStatusToPark()
+//            viewModel.getParkingLotOccupancyStatus()
+//            listenForParkingLotStatusToPark()
+            navigateToVehicleFragment()
         }
         binding.btnshowStatus.setOnClickListener {
-            viewModel.onEvent(ParkingLotEvent.ShowParkingLot)
-            listenForParkingLot()
+            navigateToParkingLotFragment()
         }
         binding.btnUnPark.setOnClickListener {
             viewModel.getParkedSpaces()
@@ -81,28 +81,23 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         lifecycleScope.launch {
             viewModel.parkedSpacesFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    if (it.isNotEmpty()) {
-                        navigateToUnParkFragment()
-                    } else {
-                        Snackbar.make(
-                            requireView(),
-                            "No vehicle available to unpark", LENGTH_SHORT
-                        ).show()
+                    when(it){
+                        is Resource.Error -> TODO()
+                        is Resource.Loading -> TODO()
+                        is Resource.Success -> {
+                            if (it.data?.isNotEmpty() == true) {
+                                navigateToUnParkFragment()
+                            } else {
+                                Snackbar.make(
+                                    requireView(),
+                                    "No vehicle available to unpark", LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     }
                 }
         }
     }
-
-    private fun listenForParkingLot() {
-        lifecycleScope.launch {
-            viewModel.parkingLotFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    if (it is Resource.Success)
-                        it.data?.let { it1 -> navigateToParkingLotFragment(it1) }
-                }
-        }
-    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -125,9 +120,9 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         navigateToFragment(action)
     }
 
-    private fun navigateToParkingLotFragment(parkingLot: ParkingLot) {
+    private fun navigateToParkingLotFragment() {
         val action =
-            WelcomeFragmentDirections.actionWelcomeFragmentToParkingLotFragment(parkingLot = parkingLot)
+            WelcomeFragmentDirections.actionWelcomeFragmentToParkingLotFragment()
         navigateToFragment(action)
     }
 
